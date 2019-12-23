@@ -1,9 +1,5 @@
 node_modules
-dist
-docs
 pnpm-lock.yaml
 .eslintcache
 .eslintrc.json
-# Ignores compiled TypeScript files
-src/**/*.js
-src/**/*.map
+.eslintignore

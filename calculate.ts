@@ -11,10 +11,10 @@ const checkedByTypescript = Object.keys(
   eslintRecommended.default.overrides[0].rules
 );
 
-const stdinReader = new BufReader(Deno.stdin);
-console.log('yes/no:');
-const input = ((await stdinReader.readString('\n')) as string).trim();
-console.log(`You wrote "${input}"`);
+// const stdinReader = new BufReader(Deno.stdin);
+// console.log('yes/no:');
+// const input = ((await stdinReader.readString('\n')) as string).trim();
+// console.log(`You wrote "${input}"`);
 
 const basicPrettierConflicts = [
   '@typescript-eslint/brace-style',

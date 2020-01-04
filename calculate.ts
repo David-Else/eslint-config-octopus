@@ -188,13 +188,13 @@ const allRemovedRules = [...off, ...usedImport, ...conflicts, ...ts];
 console.log(`${bold(`${allRemovedRules.length} rules were removed`)}
 ----------------------
 ${bold(`That were turned off (${off.length})`)}
-${off.join('\n')});
+${off.join('\n')}
 
 ${bold(`That were using the import plugin (${usedImport.length})`)}
-${usedImport.join('\n')});
+${usedImport.join('\n')}
 
 ${bold(`That were conflicting with prettier (${conflicts.length})`)}
-${conflicts.join('\n')});
+${conflicts.join('\n')}
 
 ${bold(`That were not needed as TypeScript has built in checks (${ts.length})`)}
 ${ts.join('\n')}`);

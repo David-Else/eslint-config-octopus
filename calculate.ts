@@ -93,6 +93,14 @@ function assert(condition: any): asserts condition {
     throw new Error();
   }
 }
+
+const removedRules: { [key: string]: string[] } = {
+  off: [],
+  usedImport: [],
+  conflicts: [],
+  ts: []
+};
+
 const off: string[] = [];
 const usedImport: string[] = [];
 const conflicts: string[] = [];
@@ -182,9 +190,9 @@ if (typeof finalOutput === 'object') {
  * Write information on removed rules to the console
  * ============================================================================
  */
-const bold = (text: string) => `\x1b[1m${text}\x1b[0m`;
 const allRemovedRules = [...off, ...usedImport, ...conflicts, ...ts];
 
+const bold = (text: string) => `\x1b[1m${text}\x1b[0m`;
 console.log(`${bold(`${allRemovedRules.length} rules were removed`)}
 ----------------------
 ${bold(`That were turned off (${off.length})`)}

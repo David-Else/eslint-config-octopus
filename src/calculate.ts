@@ -1,8 +1,8 @@
 import data from '../output.json';
 import { createRequire } from './deps.ts';
 // import { BufReader } from './deps.ts';
-import { view } from './view.ts';
-import { basicPrettierConflicts } from './basicPrettierConflicts.ts';
+import { basicPrettierConflicts } from './rulesToRemove.ts';
+import { writeStatsToConsole } from './view.ts';
 const require_ = createRequire(import.meta.url); // deno legacy module compatability
 
 // const stdinReader = new BufReader(Deno.stdin);
@@ -124,6 +124,6 @@ if (typeof finalOutput === 'object') {
  * Write information on removed rules to the console
  * ============================================================================
  */
-view(removedRules);
+writeStatsToConsole(removedRules);
 
 // deno --allow-read --allow-write calculate.ts

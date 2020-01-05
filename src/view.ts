@@ -1,4 +1,4 @@
-export function view(removedRules: { [key: string]: string[] }) {
+export function writeStatsToConsole(removedRules: { [key: string]: string[] }) {
   const bold = (text: string) => `\x1b[1m${text}\x1b[0m`;
 
   console.log(`${bold(

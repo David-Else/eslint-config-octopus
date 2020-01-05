@@ -10,6 +10,13 @@ const require_ = createRequire(import.meta.url); // deno legacy module compatabi
  * Build new config based on set of rules
  * ============================================================================
  */
+const removedRules: { [key: string]: string[] } = {
+  off: [],
+  usedImport: [],
+  conflicts: [],
+  ts: []
+};
+
 // Compatibility ruleset that disables rules from eslint:recommended which
 // are already handled by TypeScript.
 const tsEslintRecommendedRules = Object.keys(
@@ -17,13 +24,6 @@ const tsEslintRecommendedRules = Object.keys(
     '../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js'
   ).default.overrides[0].rules
 );
-
-const removedRules: { [key: string]: string[] } = {
-  off: [],
-  usedImport: [],
-  conflicts: [],
-  ts: []
-};
 
 const newESLintConfig = Object.fromEntries(
   Object.entries(allExportedRules.rules).filter(([key, value]) => {

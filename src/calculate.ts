@@ -1,8 +1,8 @@
 import allExportedRules from '../output.json';
-import { createRequire } from './deps.ts';
 // import { BufReader } from './deps.ts';
 import { basicPrettierConflicts } from './rulesToRemove.ts';
 import { writeStatsToConsole } from './view.ts';
+import { createRequire } from './deps.ts';
 const require_ = createRequire(import.meta.url); // deno legacy module compatability
 
 /**
@@ -10,12 +10,12 @@ const require_ = createRequire(import.meta.url); // deno legacy module compatabi
  * Build new config based on set of rules
  * ============================================================================
  */
-const typeScriptEslintRecommended = require_(
-  '../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js'
-);
-// extract rule names (from eslint:recommended) which are already handled by TypeScript
-const checkedByTypescript = Object.keys(
-  typeScriptEslintRecommended.default.overrides[0].rules
+// Compatibility ruleset that disables rules from eslint:recommended which
+// are already handled by TypeScript.
+const tsEslintRecommendedRules = Object.keys(
+  require_(
+    '../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js'
+  ).default.overrides[0].rules
 );
 
 const removedRules: { [key: string]: string[] } = {
@@ -30,7 +30,7 @@ const newESLintConfig = Object.fromEntries(
     const turnedOff = value[0] === 'off';
     const usesImportPlugin = key.startsWith('import/');
     const conflictsWithPrettier = basicPrettierConflicts.includes(key);
-    const checkedByTS = checkedByTypescript.includes(key);
+    const checkedByTS = tsEslintRecommendedRules.includes(key);
 
     if (turnedOff) {
       removedRules.off.push(key);
@@ -92,11 +92,6 @@ async function writeToDisk(fileName: string, data: string) {
 
 writeToDisk('.eslintrc.json', JSON.stringify(finalOutput, null, 2));
 writeToDisk('.eslintignore', eslintignore);
-
-if (typeof finalOutput === 'object') {
-  finalOutput;
-  // input is typed as unknown here, why not object?
-}
 
 /**
  * ============================================================================

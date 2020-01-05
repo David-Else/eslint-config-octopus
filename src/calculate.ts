@@ -1,40 +1,21 @@
-import data from '../output.json';
+import allExportedRules from '../output.json';
 import { createRequire } from './deps.ts';
 // import { BufReader } from './deps.ts';
 import { basicPrettierConflicts } from './rulesToRemove.ts';
 import { writeStatsToConsole } from './view.ts';
 const require_ = createRequire(import.meta.url); // deno legacy module compatability
 
-// const stdinReader = new BufReader(Deno.stdin);
-// console.log('yes/no:');
-// const input = ((await stdinReader.readString('\n')) as string).trim();
-// console.log(`You wrote "${input}"`);
-
-// assert(typeof data.rules === 'object' || null);
-// assert(Array.isArray(value));
-
-/**
- * ============================================================================
- * Generic assert function for TS 3.7
- * ============================================================================
- */
-function assert(condition: any): asserts condition {
-  if (!condition) {
-    throw new Error();
-  }
-}
-
 /**
  * ============================================================================
  * Build new config based on set of rules
  * ============================================================================
  */
-const eslintRecommended = require_(
+const typeScriptEslintRecommended = require_(
   '../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js'
 );
 // extract rule names (from eslint:recommended) which are already handled by TypeScript
 const checkedByTypescript = Object.keys(
-  eslintRecommended.default.overrides[0].rules
+  typeScriptEslintRecommended.default.overrides[0].rules
 );
 
 const removedRules: { [key: string]: string[] } = {
@@ -45,7 +26,7 @@ const removedRules: { [key: string]: string[] } = {
 };
 
 const newESLintConfig = Object.fromEntries(
-  Object.entries(data.rules).filter(([key, value]) => {
+  Object.entries(allExportedRules.rules).filter(([key, value]) => {
     const turnedOff = value[0] === 'off';
     const usesImportPlugin = key.startsWith('import/');
     const conflictsWithPrettier = basicPrettierConflicts.includes(key);
@@ -74,8 +55,6 @@ const newESLintConfig = Object.fromEntries(
     return [key, value];
   })
 );
-
-// assert(typeof newESLintConfig === 'object' && newESLintConfig !== null);
 
 const eslintignore = `# don't ever lint node_modules
 node_modules

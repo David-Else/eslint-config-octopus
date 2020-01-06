@@ -1,4 +1,4 @@
-import allExportedRules from '../output.json';
+import allExportedRules from '../eslint-rules-complete.json';
 // import { BufReader } from './deps.ts';
 import { basicPrettierConflicts } from './rulesToRemove.ts';
 import { writeStatsToConsole } from './view.ts';
@@ -16,6 +16,8 @@ const removedRules: { [key: string]: string[] } = {
   conflicts: [],
   ts: []
 };
+
+const modifiedRules: string[] = [];
 
 // Compatibility ruleset that disables rules from eslint:recommended which
 // are already handled by TypeScript.
@@ -48,8 +50,9 @@ const newESLintConfig = Object.fromEntries(
       removedRules.ts.push(key);
       return;
     }
-    // replace BUG!!!!! does not replace value
     // if (key === 'curly') {
+    //   modifiedRules.push(key);
+    //   console.log('arrgghhh!!!!!!!!!!!' + [key, value]);
     //   return [key, ['error', 'all']];
     // }
     return [key, value];

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "eslint-check": "eslint --print-config app.js | eslint-config-prettier-check"
+    "print-prettier-conflicting-rules": "eslint --print-config app.js | eslint-config-prettier-check",
+    "generate-airbnb-typescript-eslint-rules-file": "eslint -c ./package.json --print-config example.js > eslint-rules-complete.json"
   },
   "eslintConfig": {
     "extends": [
@@ -15,12 +16,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.12.0",
-    "@typescript-eslint/parser": "^2.12.0",
-    "eslint": "^6.7.2",
+    "@typescript-eslint/eslint-plugin": "^2.14.0",
+    "@typescript-eslint/parser": "^2.14.0",
+    "eslint": "^6.8.0",
     "eslint-config-airbnb-typescript": "^6.3.1",
-    "eslint-config-prettier": "^6.7.0",
+    "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-import": "^2.19.1",
-    "typescript": "^3.7.3"
+    "typescript": "^3.7.4"
   }
 }

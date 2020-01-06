@@ -4,8 +4,14 @@ Generate set of ESLint rules for various situations into one file. Based on Airb
 
 Dependencies : https://deno.land/ deno executable
 
+# Installation
+
 git clone https://github.com/David-Else/automatic-eslint-rule-collection-generator
+
 cd automatic-eslint-rule-collection-generator
 
+# To create .eslintrc.json config and rules file in /src
+
 npx generate-airbnb-typescript-eslint-rules-file
+
 deno --allow-read --allow-write calculate.ts

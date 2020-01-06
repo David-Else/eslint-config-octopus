@@ -12,8 +12,10 @@ git clone https://github.com/David-Else/automatic-eslint-rule-collection-generat
 
 cd automatic-eslint-rule-collection-generator
 
+npm install
+
 ## To create .eslintrc.json config and rules file in /src
 
-npx generate-airbnb-typescript-eslint-rules-file
+npm run generate-airbnb-typescript-eslint-rules-file
 
-deno --allow-read --allow-write calculate.ts
+deno --allow-read --allow-write src/calculate.ts

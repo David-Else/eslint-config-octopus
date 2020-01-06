@@ -102,5 +102,3 @@ writeToDisk('.eslintignore', eslintignore);
  * ============================================================================
  */
 writeStatsToConsole(removedRules);
-
-// deno --allow-read --allow-write calculate.ts

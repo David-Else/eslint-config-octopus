@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "print-prettier-conflicting-rules": "eslint --print-config app.js | eslint-config-prettier-check",
-    "generate-airbnb-typescript-eslint-rules-file": "eslint -c ./package.json --print-config example.js > eslint-rules-complete.json"
+    "generate-airbnb-typescript-eslint-rules-file": "eslint -c ./package.json --print-config example.js > airbnb-typescript-eslint-rules.json"
   },
   "eslintConfig": {
     "extends": [

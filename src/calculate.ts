@@ -1,4 +1,4 @@
-import allExportedRules from '../eslint-rules-complete.json';
+import allExportedRules from '../airbnb-typescript-eslint-rules.json';
 // import { BufReader } from './deps.ts';
 import { basicPrettierConflicts } from './rulesToRemove.ts';
 import { writeStatsToConsole } from './view.ts';

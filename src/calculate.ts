@@ -5,6 +5,26 @@ import { writeStatsToConsole } from './view.ts';
 import { createRequire } from './deps.ts';
 const require_ = createRequire(import.meta.url); // deno legacy module compatability
 
+async function test(): Promise<void> {
+  let p = Deno.run({
+    args: [
+      'npx',
+      'eslint',
+      '-c',
+      '../package.json',
+      '--print-config',
+      'example.js'
+    ],
+    stdout: 'piped'
+  });
+  const fullOutPut = await Deno.readAll(p.stdout!);
+
+  const text = new TextDecoder().decode(fullOutPut);
+  const json_obj = JSON.parse(text);
+  console.log(text);
+}
+test();
+
 /**
  * ============================================================================
  * Build new config based on set of rules

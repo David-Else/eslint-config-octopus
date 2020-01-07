@@ -1,29 +1,26 @@
-import allExportedRules from '../airbnb-typescript-eslint-rules.json';
-// import { BufReader } from './deps.ts';
 import { basicPrettierConflicts } from './rulesToRemove.ts';
 import { writeStatsToConsole } from './view.ts';
 import { createRequire } from './deps.ts';
 const require_ = createRequire(import.meta.url); // deno legacy module compatability
 
-async function test(): Promise<void> {
+async function runCommandReturnResults(command: string[]) {
   let p = Deno.run({
-    args: [
-      'npx',
-      'eslint',
-      '-c',
-      '../package.json',
-      '--print-config',
-      'example.js'
-    ],
+    args: command,
     stdout: 'piped'
   });
-  const fullOutPut = await Deno.readAll(p.stdout!);
-
-  const text = new TextDecoder().decode(fullOutPut);
-  const json_obj = JSON.parse(text);
-  console.log(text);
+  const commandOutput = await Deno.readAll(p.stdout!);
+  const text = new TextDecoder().decode(commandOutput);
+  return JSON.parse(text);
 }
-test();
+
+const allExportedRules = await runCommandReturnResults([
+  'npx',
+  'eslint',
+  '-c',
+  '../package.json',
+  '--print-config',
+  'example.js'
+]);
 
 /**
  * ============================================================================

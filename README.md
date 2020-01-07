@@ -18,4 +18,4 @@ npm install
 
 npm run generate-airbnb-typescript-eslint-rules-file
 
-deno --allow-read --allow-write src/calculate.ts
+deno --allow-read --allow-write --allow-run src/calculate.ts

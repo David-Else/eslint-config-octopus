@@ -20,7 +20,7 @@ async function runCommandReturnResults(command: string[]) {
 
 /**
  * ============================================================================
- * Build new config based on set of rules
+ * Create objects of arrays to store names of removed rules to print to console
  * ============================================================================
  */
 const removedRules: { [key: string]: string[] } = {
@@ -32,8 +32,11 @@ const removedRules: { [key: string]: string[] } = {
 
 const modifiedRules: string[] = [];
 
-// Compatibility ruleset that disables rules from eslint:recommended which
-// are already handled by TypeScript.
+/**
+ * ============================================================================
+ * Import and generate files with rules from NPM dependencies
+ * ============================================================================
+ */
 const tsEslintRecommendedRules = Object.keys(
   require_(
     '../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js'
@@ -49,6 +52,11 @@ const allExportedRules = await runCommandReturnResults([
   'example.js'
 ]);
 
+/**
+ * ============================================================================
+ * Create the new final list of rules by filering out ones we don't want
+ * ============================================================================
+ */
 const newESLintConfig = Object.fromEntries(
   Object.entries(allExportedRules.rules).filter(([key, value]) => {
     const turnedOff = value[0] === 'off';
@@ -72,15 +80,20 @@ const newESLintConfig = Object.fromEntries(
       removedRules.ts.push(key);
       return;
     }
-    // if (key === 'curly') {
-    //   modifiedRules.push(key);
-    //   console.log('arrgghhh!!!!!!!!!!!' + [key, value]);
-    //   return [key, ['error', 'all']];
-    // }
+    if (key === 'curly') {
+      modifiedRules.push(key);
+      console.log('arrgghhh!!!!!!!!!!!' + [key, value]);
+      return [key, ['error', 'all']];
+    }
     return [key, value];
   })
 );
 
+/**
+ * ============================================================================
+ * Define the objects we are going to write to disk
+ * ============================================================================
+ */
 const eslintignore = `# don't ever lint node_modules
 node_modules
 # don't lint build output (make sure it's set to your correct build folder name)

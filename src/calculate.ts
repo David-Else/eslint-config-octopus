@@ -43,7 +43,7 @@ const tsEslintRecommendedRules = Object.keys(
   ).default.overrides[0].rules
 );
 
-const allExportedRules = await runCommandReturnResults([
+const entireEslintConfig = await runCommandReturnResults([
   'npx',
   'eslint',
   '-c',
@@ -52,13 +52,15 @@ const allExportedRules = await runCommandReturnResults([
   'example.js'
 ]);
 
+const eslintConfigRules = entireEslintConfig.rules;
+
 /**
  * ============================================================================
  * Create the new final list of rules by filering out ones we don't want
  * ============================================================================
  */
 const newESLintConfig = Object.fromEntries(
-  Object.entries(allExportedRules.rules).filter(([key, value]) => {
+  Object.entries(eslintConfigRules).filter(([key, value]) => {
     const turnedOff = value[0] === 'off';
     const usesImportPlugin = key.startsWith('import/');
     const conflictsWithPrettier = basicPrettierConflicts.includes(key);

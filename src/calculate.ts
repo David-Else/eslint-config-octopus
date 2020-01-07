@@ -3,6 +3,11 @@ import { writeStatsToConsole } from './view.ts';
 import { createRequire } from './deps.ts';
 const require_ = createRequire(import.meta.url); // deno legacy module compatability
 
+/**
+ * ============================================================================
+ * Execute CLI command with optional arguments and return the results
+ * ============================================================================
+ */
 async function runCommandReturnResults(command: string[]) {
   let p = Deno.run({
     args: command,
@@ -12,15 +17,6 @@ async function runCommandReturnResults(command: string[]) {
   const text = new TextDecoder().decode(commandOutput);
   return JSON.parse(text);
 }
-
-const allExportedRules = await runCommandReturnResults([
-  'npx',
-  'eslint',
-  '-c',
-  '../package.json',
-  '--print-config',
-  'example.js'
-]);
 
 /**
  * ============================================================================
@@ -43,6 +39,15 @@ const tsEslintRecommendedRules = Object.keys(
     '../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js'
   ).default.overrides[0].rules
 );
+
+const allExportedRules = await runCommandReturnResults([
+  'npx',
+  'eslint',
+  '-c',
+  '../package.json',
+  '--print-config',
+  'example.js'
+]);
 
 const newESLintConfig = Object.fromEntries(
   Object.entries(allExportedRules.rules).filter(([key, value]) => {

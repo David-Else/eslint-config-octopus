@@ -23,14 +23,22 @@ async function runCommandReturnResults(command: string[]) {
  * Create objects of arrays to store names of removed rules to print to console
  * ============================================================================
  */
-const removedRules: { [key: string]: string[] } = {
+export interface RemovedOrModifiedRules {
+  off: string[];
+  usedImport: string[];
+  conflicts: string[];
+  ts: string[];
+  modified: string[];
+  [key: string]: string[];
+}
+
+const removedOrModifiedRules: RemovedOrModifiedRules = {
   off: [],
   usedImport: [],
   conflicts: [],
-  ts: []
+  ts: [],
+  modified: []
 };
-
-const modifiedRules: string[] = [];
 
 /**
  * ============================================================================
@@ -59,6 +67,53 @@ const eslintConfigRules = entireEslintConfig.rules;
  * Create the new final list of rules by filering out ones we don't want
  * ============================================================================
  */
+
+export function returnNewShit(
+  eslintRules: any,
+  removedModRules: RemovedOrModifiedRules
+): [object, RemovedOrModifiedRules] {
+  const removedOrModifiedRules: RemovedOrModifiedRules = {
+    off: [],
+    usedImport: [],
+    conflicts: [],
+    ts: [],
+    modified: []
+  };
+
+  // Object.fromEntries(
+  //   Object.entries(eslintRules).filter(([key, value]) => {
+  //     const turnedOff = value[0] === 'off';
+  //     const usesImportPlugin = key.startsWith('import/');
+  //     const conflictsWithPrettier = basicPrettierConflicts.includes(key);
+  //     const checkedByTS = tsEslintRecommendedRules.includes(key);
+
+  //     if (turnedOff) {
+  //       removedOrModifiedRules.off.push(key);
+  //       return;
+  //     }
+  //     if (usesImportPlugin) {
+  //       removedOrModifiedRules.usedImport.push(key);
+  //       return;
+  //     }
+  //     if (conflictsWithPrettier) {
+  //       removedOrModifiedRules.conflicts.push(key);
+  //       return;
+  //     }
+  //     if (checkedByTS) {
+  //       removedOrModifiedRules.ts.push(key);
+  //       return;
+  //     }
+  //     if (key === 'curly') {
+  //       removedOrModifiedRules.modified.push(key);
+  //       console.log('arrgghhh!!!!!!!!!!!' + [key, value]);
+  //       return [key, ['error', 'all']];
+  //     }
+  //     return [key, value];
+  //   })
+  // );
+  return [eslintRules, removedOrModifiedRules];
+}
+
 const newESLintConfig = Object.fromEntries(
   Object.entries(eslintConfigRules).filter(([key, value]) => {
     const turnedOff = value[0] === 'off';
@@ -67,23 +122,23 @@ const newESLintConfig = Object.fromEntries(
     const checkedByTS = tsEslintRecommendedRules.includes(key);
 
     if (turnedOff) {
-      removedRules.off.push(key);
+      removedOrModifiedRules.off.push(key);
       return;
     }
     if (usesImportPlugin) {
-      removedRules.usedImport.push(key);
+      removedOrModifiedRules.usedImport.push(key);
       return;
     }
     if (conflictsWithPrettier) {
-      removedRules.conflicts.push(key);
+      removedOrModifiedRules.conflicts.push(key);
       return;
     }
     if (checkedByTS) {
-      removedRules.ts.push(key);
+      removedOrModifiedRules.ts.push(key);
       return;
     }
     if (key === 'curly') {
-      modifiedRules.push(key);
+      removedOrModifiedRules.modified.push(key);
       console.log('arrgghhh!!!!!!!!!!!' + [key, value]);
       return [key, ['error', 'all']];
     }
@@ -138,4 +193,8 @@ writeToDisk('.eslintignore', eslintignore);
  * Write information on removed rules to the console
  * ============================================================================
  */
-writeStatsToConsole(removedRules);
+writeStatsToConsole(removedOrModifiedRules);
+
+const [diagnostics, emitMap] = await Deno.compile(
+  'https://deno.land/std/examples/welcome.ts'
+);

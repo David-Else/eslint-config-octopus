@@ -2,6 +2,7 @@ import { basicPrettierConflicts } from './rulesToRemove.ts';
 import { writeStatsToConsole } from './view.ts';
 import { createRequire } from './deps.ts';
 const require_ = createRequire(import.meta.url); // deno legacy module compatability
+const path = new URL('../', import.meta.url).pathname;
 
 /**
  * ============================================================================
@@ -55,7 +56,7 @@ const entireEslintConfig = await runCommandReturnResults([
   'npx',
   'eslint',
   '-c',
-  '../package.json',
+  `${path}/package.json`,
   '--print-config',
   'example.js'
 ]);
@@ -68,51 +69,20 @@ const eslintConfigRules = entireEslintConfig.rules;
  * ============================================================================
  */
 
-export function returnNewShit(
-  eslintRules: any,
-  removedModRules: RemovedOrModifiedRules
-): [object, RemovedOrModifiedRules] {
-  const removedOrModifiedRules: RemovedOrModifiedRules = {
-    off: [],
-    usedImport: [],
-    conflicts: [],
-    ts: [],
-    modified: []
-  };
+// export function tempReturnStuff(
+//   eslintRules: any,
+//   removedModRules: RemovedOrModifiedRules
+// ): [object, RemovedOrModifiedRules] {
+//   const removedOrModifiedRules: RemovedOrModifiedRules = {
+//     off: [],
+//     usedImport: [],
+//     conflicts: [],
+//     ts: [],
+//     modified: []
+//   };
 
-  // Object.fromEntries(
-  //   Object.entries(eslintRules).filter(([key, value]) => {
-  //     const turnedOff = value[0] === 'off';
-  //     const usesImportPlugin = key.startsWith('import/');
-  //     const conflictsWithPrettier = basicPrettierConflicts.includes(key);
-  //     const checkedByTS = tsEslintRecommendedRules.includes(key);
-
-  //     if (turnedOff) {
-  //       removedOrModifiedRules.off.push(key);
-  //       return;
-  //     }
-  //     if (usesImportPlugin) {
-  //       removedOrModifiedRules.usedImport.push(key);
-  //       return;
-  //     }
-  //     if (conflictsWithPrettier) {
-  //       removedOrModifiedRules.conflicts.push(key);
-  //       return;
-  //     }
-  //     if (checkedByTS) {
-  //       removedOrModifiedRules.ts.push(key);
-  //       return;
-  //     }
-  //     if (key === 'curly') {
-  //       removedOrModifiedRules.modified.push(key);
-  //       console.log('arrgghhh!!!!!!!!!!!' + [key, value]);
-  //       return [key, ['error', 'all']];
-  //     }
-  //     return [key, value];
-  //   })
-  // );
-  return [eslintRules, removedOrModifiedRules];
-}
+//   return [eslintRules, removedOrModifiedRules];
+// }
 
 const newESLintConfig = Object.fromEntries(
   Object.entries(eslintConfigRules).filter(([key, value]) => {
@@ -194,7 +164,3 @@ writeToDisk('.eslintignore', eslintignore);
  * ============================================================================
  */
 writeStatsToConsole(removedOrModifiedRules);
-
-const [diagnostics, emitMap] = await Deno.compile(
-  'https://deno.land/std/examples/welcome.ts'
-);

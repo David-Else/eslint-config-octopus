@@ -85,7 +85,7 @@ export function filterRules(
     conflicts: [],
     ts: [],
     modified: []
-  };  
+  };
   Object.entries(ruly).filter(([key, value]) => {
     const turnedOff = value[0] === 'off';
     const usesImportPlugin = key.startsWith('import/');
@@ -119,7 +119,9 @@ export function filterRules(
   return [ruly, removedOrModifiedRules];
 }
 
-const [newESLintConfig, removedOrModifiedRules ] = filterRules(eslintConfigRules)
+const [newESLintConfig, removedOrModifiedRules] = filterRules(
+  eslintConfigRules
+);
 
 // const newESLintConfig = Object.fromEntries(
 //   Object.entries(eslintConfigRules).filter(([key, value]) => {

@@ -1,6 +1,4 @@
-// @ts-ignore
 import { assertEquals } from 'https://deno.land/std/testing/asserts.ts';
-// @ts-ignore
 import { test, runTests } from 'https://deno.land/std/testing/mod.ts';
 import { filterRules } from '../src/calculate.ts';
 

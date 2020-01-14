@@ -123,38 +123,6 @@ const [newESLintConfig, removedOrModifiedRules] = filterRules(
   eslintConfigRules
 );
 
-// const newESLintConfig = Object.fromEntries(
-//   Object.entries(eslintConfigRules).filter(([key, value]) => {
-//     const turnedOff = value[0] === 'off';
-//     const usesImportPlugin = key.startsWith('import/');
-//     const conflictsWithPrettier = basicPrettierConflicts.includes(key);
-//     const checkedByTS = tsEslintRecommendedRules.includes(key);
-
-//     if (turnedOff) {
-//       removedOrModifiedRules.off.push(key);
-//       return;
-//     }
-//     if (usesImportPlugin) {
-//       removedOrModifiedRules.usedImport.push(key);
-//       return;
-//     }
-//     if (conflictsWithPrettier) {
-//       removedOrModifiedRules.conflicts.push(key);
-//       return;
-//     }
-//     if (checkedByTS) {
-//       removedOrModifiedRules.ts.push(key);
-//       return;
-//     }
-//     if (key === 'curly') {
-//       removedOrModifiedRules.modified.push(key);
-//       console.log('arrgghhh!!!!!!!!!!!' + [key, value]);
-//       return [key, ['error', 'all']];
-//     }
-//     return [key, value];
-//   })
-// );
-
 /**
  * ============================================================================
  * Define the objects we are going to write to disk

@@ -3,6 +3,7 @@ import { writeStatsToConsole } from './view.ts';
 import { createRequire } from './deps.ts';
 const require_ = createRequire(import.meta.url); // deno legacy module compatability
 const path = new URL('../', import.meta.url).pathname;
+<<<<<<< HEAD
 
 export type JsonWithoutNull =
   | string
@@ -10,6 +11,8 @@ export type JsonWithoutNull =
   | boolean
   | { [property: string]: JsonWithoutNull }
   | JsonWithoutNull[];
+=======
+>>>>>>> d465a23f9fb74d3b26cb746e1365b391bdbf31d9
 
 /**
  * ============================================================================
@@ -39,6 +42,7 @@ export interface RemovedOrModifiedRules {
   modified: string[];
   [key: string]: string[];
 }
+<<<<<<< HEAD
 
 // const removedOrModifiedRules: RemovedOrModifiedRules = {
 //   off: [],
@@ -48,6 +52,17 @@ export interface RemovedOrModifiedRules {
 //   modified: []
 // };
 
+=======
+
+const removedOrModifiedRules: RemovedOrModifiedRules = {
+  off: [],
+  usedImport: [],
+  conflicts: [],
+  ts: [],
+  modified: []
+};
+
+>>>>>>> d465a23f9fb74d3b26cb746e1365b391bdbf31d9
 /**
  * ============================================================================
  * Import and generate files with rules from NPM dependencies
@@ -76,6 +91,7 @@ const eslintConfigRules = entireEslintConfig.rules;
  * ============================================================================
  */
 
+<<<<<<< HEAD
 export function filterRules(
   ruly: JsonWithoutNull
 ): [JsonWithoutNull, RemovedOrModifiedRules] {
@@ -87,6 +103,25 @@ export function filterRules(
     modified: []
   };
   Object.entries(ruly).filter(([key, value]) => {
+=======
+// export function tempReturnStuff(
+//   eslintRules: any,
+//   removedModRules: RemovedOrModifiedRules
+// ): [object, RemovedOrModifiedRules] {
+//   const removedOrModifiedRules: RemovedOrModifiedRules = {
+//     off: [],
+//     usedImport: [],
+//     conflicts: [],
+//     ts: [],
+//     modified: []
+//   };
+
+//   return [eslintRules, removedOrModifiedRules];
+// }
+
+const newESLintConfig = Object.fromEntries(
+  Object.entries(eslintConfigRules).filter(([key, value]) => {
+>>>>>>> d465a23f9fb74d3b26cb746e1365b391bdbf31d9
     const turnedOff = value[0] === 'off';
     const usesImportPlugin = key.startsWith('import/');
     const conflictsWithPrettier = basicPrettierConflicts.includes(key);
@@ -108,11 +143,19 @@ export function filterRules(
       removedOrModifiedRules.ts.push(key);
       return;
     }
+<<<<<<< HEAD
     // if (key === 'curly') {
     //   removedOrModifiedRules.modified.push(key);
     //   console.log('arrgghhh!!!!!!!!!!!' + [key, value]);
     //   return [key, ['error', 'all']];
     // }
+=======
+    if (key === 'curly') {
+      removedOrModifiedRules.modified.push(key);
+      console.log('arrgghhh!!!!!!!!!!!' + [key, value]);
+      return [key, ['error', 'all']];
+    }
+>>>>>>> d465a23f9fb74d3b26cb746e1365b391bdbf31d9
     return [key, value];
   });
 
@@ -199,6 +242,7 @@ async function writeToDisk(fileName: string, data: string) {
  * Write information on removed rules to the console
  * ============================================================================
  */
+<<<<<<< HEAD
 
 // const [diagnostics, emitMap] = await Deno.compile(`${path}src/calculate.ts`);
 // // assert(diagnostics == null); // ensuring no diagnostics are returned
@@ -213,3 +257,6 @@ if (import.meta.main) {
 }
 
 // dont forget deno types > lib.deno_runtime.d.ts
+=======
+writeStatsToConsole(removedOrModifiedRules);
+>>>>>>> d465a23f9fb74d3b26cb746e1365b391bdbf31d9

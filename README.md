@@ -17,5 +17,6 @@ npm install
 ## To create .eslintrc.json config and rules file in /src
 
 deno --allow-read --allow-write --allow-run src/calculate.ts
+deno test test/ --allow-env --allow-write --allow-net --allow-run
 
 Some prettier conficting rules are hard coded, to see them generated from latest `npm run print-prettier-conflicting-rules`

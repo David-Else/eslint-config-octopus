@@ -4,6 +4,13 @@ import { createRequire } from './deps.ts';
 const require_ = createRequire(import.meta.url); // deno legacy module compatability
 const path = new URL('../', import.meta.url).pathname;
 
+export type JsonWithoutNull =
+  | string
+  | number
+  | boolean
+  | { [property: string]: JsonWithoutNull }
+  | JsonWithoutNull[];
+
 /**
  * ============================================================================
  * Execute CLI command with optional arguments and return the results
@@ -33,13 +40,13 @@ export interface RemovedOrModifiedRules {
   [key: string]: string[];
 }
 
-const removedOrModifiedRules: RemovedOrModifiedRules = {
-  off: [],
-  usedImport: [],
-  conflicts: [],
-  ts: [],
-  modified: []
-};
+// const removedOrModifiedRules: RemovedOrModifiedRules = {
+//   off: [],
+//   usedImport: [],
+//   conflicts: [],
+//   ts: [],
+//   modified: []
+// };
 
 /**
  * ============================================================================
@@ -69,23 +76,17 @@ const eslintConfigRules = entireEslintConfig.rules;
  * ============================================================================
  */
 
-// export function tempReturnStuff(
-//   eslintRules: any,
-//   removedModRules: RemovedOrModifiedRules
-// ): [object, RemovedOrModifiedRules] {
-//   const removedOrModifiedRules: RemovedOrModifiedRules = {
-//     off: [],
-//     usedImport: [],
-//     conflicts: [],
-//     ts: [],
-//     modified: []
-//   };
-
-//   return [eslintRules, removedOrModifiedRules];
-// }
-
-const newESLintConfig = Object.fromEntries(
-  Object.entries(eslintConfigRules).filter(([key, value]) => {
+export function filterRules(
+  ruly: JsonWithoutNull
+): [JsonWithoutNull, RemovedOrModifiedRules] {
+  const removedOrModifiedRules: RemovedOrModifiedRules = {
+    off: [],
+    usedImport: [],
+    conflicts: [],
+    ts: [],
+    modified: []
+  };  
+  Object.entries(ruly).filter(([key, value]) => {
     const turnedOff = value[0] === 'off';
     const usesImportPlugin = key.startsWith('import/');
     const conflictsWithPrettier = basicPrettierConflicts.includes(key);
@@ -107,14 +108,50 @@ const newESLintConfig = Object.fromEntries(
       removedOrModifiedRules.ts.push(key);
       return;
     }
-    if (key === 'curly') {
-      removedOrModifiedRules.modified.push(key);
-      console.log('arrgghhh!!!!!!!!!!!' + [key, value]);
-      return [key, ['error', 'all']];
-    }
+    // if (key === 'curly') {
+    //   removedOrModifiedRules.modified.push(key);
+    //   console.log('arrgghhh!!!!!!!!!!!' + [key, value]);
+    //   return [key, ['error', 'all']];
+    // }
     return [key, value];
-  })
-);
+  });
+
+  return [ruly, removedOrModifiedRules];
+}
+
+const [newESLintConfig, removedOrModifiedRules ] = filterRules(eslintConfigRules)
+
+// const newESLintConfig = Object.fromEntries(
+//   Object.entries(eslintConfigRules).filter(([key, value]) => {
+//     const turnedOff = value[0] === 'off';
+//     const usesImportPlugin = key.startsWith('import/');
+//     const conflictsWithPrettier = basicPrettierConflicts.includes(key);
+//     const checkedByTS = tsEslintRecommendedRules.includes(key);
+
+//     if (turnedOff) {
+//       removedOrModifiedRules.off.push(key);
+//       return;
+//     }
+//     if (usesImportPlugin) {
+//       removedOrModifiedRules.usedImport.push(key);
+//       return;
+//     }
+//     if (conflictsWithPrettier) {
+//       removedOrModifiedRules.conflicts.push(key);
+//       return;
+//     }
+//     if (checkedByTS) {
+//       removedOrModifiedRules.ts.push(key);
+//       return;
+//     }
+//     if (key === 'curly') {
+//       removedOrModifiedRules.modified.push(key);
+//       console.log('arrgghhh!!!!!!!!!!!' + [key, value]);
+//       return [key, ['error', 'all']];
+//     }
+//     return [key, value];
+//   })
+// );
 
 /**
  * ============================================================================
@@ -155,12 +192,22 @@ async function writeToDisk(fileName: string, data: string) {
   await Deno.writeFile(fileName, encoder.encode(data));
 }
 
-writeToDisk('.eslintrc.json', JSON.stringify(finalOutput, null, 2));
-writeToDisk('.eslintignore', eslintignore);
-
 /**
  * ============================================================================
  * Write information on removed rules to the console
  * ============================================================================
  */
-writeStatsToConsole(removedOrModifiedRules);
+
+// const [diagnostics, emitMap] = await Deno.compile(`${path}src/calculate.ts`);
+// // assert(diagnostics == null); // ensuring no diagnostics are returned
+// console.log(emitMap);
+
+// Any imported module obviously needs to be executed... that's fundamental to JS.
+// Anything top-level in a module you want only to be run when it's used as a main module should be underneath an import.meta.main check.
+if (import.meta.main) {
+  writeToDisk('.eslintrc.json', JSON.stringify(finalOutput, null, 2));
+  writeToDisk('.eslintignore', eslintignore);
+  writeStatsToConsole(removedOrModifiedRules);
+}
+
+// dont forget deno types > lib.deno_runtime.d.ts

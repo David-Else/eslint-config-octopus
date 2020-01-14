@@ -28,28 +28,6 @@ async function runCommandReturnResults(command: string[]) {
 
 /**
  * ============================================================================
- * Create objects of arrays to store names of removed rules to print to console
- * ============================================================================
- */
-export interface RemovedOrModifiedRules {
-  off: string[];
-  usedImport: string[];
-  conflicts: string[];
-  ts: string[];
-  modified: string[];
-  [key: string]: string[];
-}
-
-// const removedOrModifiedRules: RemovedOrModifiedRules = {
-//   off: [],
-//   usedImport: [],
-//   conflicts: [],
-//   ts: [],
-//   modified: []
-// };
-
-/**
- * ============================================================================
  * Import and generate files with rules from NPM dependencies
  * ============================================================================
  */
@@ -75,6 +53,14 @@ const eslintConfigRules = entireEslintConfig.rules;
  * Create the new final list of rules by filering out ones we don't want
  * ============================================================================
  */
+export interface RemovedOrModifiedRules {
+  off: string[];
+  usedImport: string[];
+  conflicts: string[];
+  ts: string[];
+  modified: string[];
+  [key: string]: string[];
+}
 
 export function filterRules(
   ruly: JsonWithoutNull
@@ -168,12 +154,6 @@ async function writeToDisk(fileName: string, data: string) {
  * ============================================================================
  */
 
-// const [diagnostics, emitMap] = await Deno.compile(`${path}src/calculate.ts`);
-// // assert(diagnostics == null); // ensuring no diagnostics are returned
-// console.log(emitMap);
-
-// Any imported module obviously needs to be executed... that's fundamental to JS.
-// Anything top-level in a module you want only to be run when it's used as a main module should be underneath an import.meta.main check.
 if (import.meta.main) {
   writeToDisk('.eslintrc.json', JSON.stringify(finalOutput, null, 2));
   writeToDisk('.eslintignore', eslintignore);

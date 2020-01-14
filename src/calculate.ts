@@ -37,6 +37,7 @@ const tsEslintRecommendedRules = Object.keys(
   ).default.overrides[0].rules
 );
 
+// ERROR once a .eslintrc in ./ is created it reads that and not package.json!
 const entireEslintConfig = await runCommandReturnResults([
   'npx',
   'eslint',

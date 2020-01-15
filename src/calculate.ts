@@ -41,6 +41,7 @@ const tsEslintRecommendedRules = Object.keys(
 const entireEslintConfig = await runCommandReturnResults([
   'npx',
   'eslint',
+  '--no-eslintrc',
   '-c',
   `${path}/package.json`,
   '--print-config',
@@ -118,7 +119,8 @@ const [newESLintConfig, removedOrModifiedRules] = filterRules(
 const eslintignore = `# don't ever lint node_modules
 node_modules
 # don't lint build output (make sure it's set to your correct build folder name)
-dist`;
+dist
+.eslintrc.json`;
 
 const finalOutput = {
   env: {

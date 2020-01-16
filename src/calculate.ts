@@ -48,31 +48,30 @@ const entireEslintConfig = await runCommandReturnResults([
   'example.js'
 ]);
 
-const eslintConfigRules = entireEslintConfig.rules;
-
 /**
  * ============================================================================
  * Create the new final list of rules by filering out ones we don't want
  * ============================================================================
  */
-export interface RemovedOrModifiedRules {
+// split this into removed AND modified list and make modified work
+export interface RemovedRulesLog {
   off: string[];
   usedImport: string[];
   conflicts: string[];
   ts: string[];
-  modified: string[];
+  // modified: string[];
   [key: string]: string[];
 }
 
 export function filterRules(
   eslintRules: JsonWithoutNull
-): [JsonWithoutNull, RemovedOrModifiedRules] {
-  const removedOrModifiedRules: RemovedOrModifiedRules = {
+): [JsonWithoutNull, RemovedRulesLog] {
+  const removedRulesLog: RemovedRulesLog = {
     off: [],
     usedImport: [],
     conflicts: [],
     ts: [],
-    modified: []
+    modified: [] // << why can't we delete this?!
   };
 
   Object.entries(eslintRules).filter(([rulesKey, rulesValue]) => {
@@ -84,17 +83,17 @@ export function filterRules(
 
     for (let [mapKey, mapValue] of rulesToRemove.entries()) {
       if (mapValue) {
-        removedOrModifiedRules[mapKey].push(rulesKey);
+        removedRulesLog[mapKey].push(rulesKey);
         return;
       }
     }
     return [rulesKey, rulesValue];
   });
-  return [eslintRules, removedOrModifiedRules];
+  return [eslintRules, removedRulesLog];
 }
 
 const [newESLintConfig, removedOrModifiedRules] = filterRules(
-  eslintConfigRules
+  entireEslintConfig.rules
 );
 
 /**

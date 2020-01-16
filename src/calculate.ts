@@ -141,7 +141,6 @@ async function writeToDisk(fileName: string, data: string) {
  * Write information on removed rules to the console
  * ============================================================================
  */
-
 if (import.meta.main) {
   writeToDisk('.eslintrc.json', JSON.stringify(finalOutput, null, 2));
   writeToDisk('.eslintignore', eslintignore);

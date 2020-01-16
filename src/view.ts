@@ -12,19 +12,14 @@ export function writeStatsToConsole(removedRules: { [key: string]: string[] }) {
     } rules were removed`
   )}
 ----------------------
-${bold(`That were turned off (${removedRules.off.length})`)}
-${removedRules.off.join('\n')}
+${Object.entries(removedRules)
+  .map(([ruleDescription, ruleNames]) => {
+    return [
+      `That were: ${bold(`${ruleDescription}`)} ${ruleNames.length}
+      ${ruleNames.map(ruleName => ruleName).join('\n')}
 
-${bold(`That were using the import plugin (${removedRules.usedImport.length})`)}
-${removedRules.usedImport.join('\n')}
-
-${bold(
-  `That were conflicting with prettier (${removedRules.conflicts.length})`
-)}
-${removedRules.conflicts.join('\n')}
-
-${bold(
-  `That were not needed as TypeScript has built in checks (${removedRules.ts.length})`
-)}
-${removedRules.ts.join('\n')}`);
+    `
+    ];
+  })
+  .join('')}`);
 }

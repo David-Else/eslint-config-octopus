@@ -8,7 +8,7 @@ export function writeStatsToConsole(removedRules: { [key: string]: string[] }) {
   const removedRulesList = Object.entries(removedRules)
     .map(([ruleDescription, ruleNames]) => [
       `${ruleNames.length} were ${bold(ruleDescription)}
-      
+
 ${ruleNames.map(ruleName => ruleName).join('\n')}
 
 `
@@ -21,3 +21,13 @@ ${totalNumberOfRules} rules were removed
 ${removedRulesList}
 `);
 }
+
+// const testRules = {
+//   off: ['off rule 1', `off rule 2`],
+//   usedImport: [],
+//   conflicts: [],
+//   ts: [`ts rule 1`, `ts rule 2`, `ts rule 3`],
+//   modified: []
+// };
+
+// writeStatsToConsole(testRules);

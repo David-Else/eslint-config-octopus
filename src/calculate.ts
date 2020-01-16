@@ -65,7 +65,7 @@ export interface RemovedOrModifiedRules {
 }
 
 export function filterRules(
-  ruly: JsonWithoutNull
+  eslintRules: JsonWithoutNull
 ): [JsonWithoutNull, RemovedOrModifiedRules] {
   const removedOrModifiedRules: RemovedOrModifiedRules = {
     off: [],
@@ -74,37 +74,23 @@ export function filterRules(
     ts: [],
     modified: []
   };
-  Object.entries(ruly).filter(([key, value]) => {
-    const turnedOff = value[0] === 'off';
-    const usesImportPlugin = key.startsWith('import/');
-    const conflictsWithPrettier = basicPrettierConflicts.includes(key);
-    const checkedByTS = tsEslintRecommendedRules.includes(key);
 
-    if (turnedOff) {
-      removedOrModifiedRules.off.push(key);
-      return;
+  Object.entries(eslintRules).filter(([rulesKey, rulesValue]) => {
+    const rulesToRemove = new Map();
+    rulesToRemove.set('off', rulesValue[0] === 'off');
+    rulesToRemove.set('usedImport', rulesKey.startsWith('import/'));
+    rulesToRemove.set('conflicts', basicPrettierConflicts.includes(rulesKey));
+    rulesToRemove.set('ts', tsEslintRecommendedRules.includes(rulesKey));
+
+    for (let [mapKey, mapValue] of rulesToRemove.entries()) {
+      if (mapValue) {
+        removedOrModifiedRules[mapKey].push(rulesKey);
+        return;
+      }
     }
-    if (usesImportPlugin) {
-      removedOrModifiedRules.usedImport.push(key);
-      return;
-    }
-    if (conflictsWithPrettier) {
-      removedOrModifiedRules.conflicts.push(key);
-      return;
-    }
-    if (checkedByTS) {
-      removedOrModifiedRules.ts.push(key);
-      return;
-    }
-    // if (key === 'curly') {
-    //   removedOrModifiedRules.modified.push(key);
-    //   console.log('arrgghhh!!!!!!!!!!!' + [key, value]);
-    //   return [key, ['error', 'all']];
-    // }
-    return [key, value];
+    return [rulesKey, rulesValue];
   });
-
-  return [ruly, removedOrModifiedRules];
+  return [eslintRules, removedOrModifiedRules];
 }
 
 const [newESLintConfig, removedOrModifiedRules] = filterRules(

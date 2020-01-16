@@ -1,4 +1,6 @@
-export function writeStatsToConsole(removedRules: { [key: string]: string[] }) {
+import { RemovedRulesLog } from './calculate.ts';
+
+export function writeStatsToConsole(removedRules: RemovedRulesLog) {
   const bold = (text: string) => `\x1b[1m${text}\x1b[0m`;
 
   const totalNumberOfRules = Object.values(removedRules)

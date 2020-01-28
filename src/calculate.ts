@@ -1,8 +1,8 @@
-import { basicPrettierConflicts } from './rulesToRemove.ts';
-import { writeStatsToConsole } from './view.ts';
-import { createRequire } from './deps.ts';
+import { basicPrettierConflicts } from "./rulesToRemove.ts";
+import { writeStatsToConsole } from "./view.ts";
+import { createRequire } from "../deps.ts";
 const require_ = createRequire(import.meta.url); // deno legacy module compatability
-const path = new URL('../', import.meta.url).pathname;
+const path = new URL("../", import.meta.url).pathname;
 
 export type JsonWithoutNull =
   | string
@@ -19,7 +19,7 @@ export type JsonWithoutNull =
 async function runCommandReturnResults(command: string[]) {
   let p = Deno.run({
     args: command,
-    stdout: 'piped'
+    stdout: "piped"
   });
   const commandOutput = await Deno.readAll(p.stdout!);
   const text = new TextDecoder().decode(commandOutput);
@@ -33,19 +33,19 @@ async function runCommandReturnResults(command: string[]) {
  */
 const tsEslintRecommendedRules = Object.keys(
   require_(
-    '../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js'
+    "../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js"
   ).default.overrides[0].rules
 );
 
 // ERROR once a .eslintrc in ./ is created it reads that and not package.json!
 const entireEslintConfig = await runCommandReturnResults([
-  'npx',
-  'eslint',
-  '--no-eslintrc',
-  '-c',
+  "npx",
+  "eslint",
+  "--no-eslintrc",
+  "-c",
   `${path}/package.json`,
-  '--print-config',
-  'example.js'
+  "--print-config",
+  "example.js"
 ]);
 
 /**
@@ -74,22 +74,25 @@ export function filterRules(
     modified: [] // << why can't we delete this?!
   };
 
-  Object.entries(eslintRules).filter(([rulesKey, rulesValue]) => {
-    const rulesToRemove = new Map();
-    rulesToRemove.set('off', rulesValue[0] === 'off');
-    rulesToRemove.set('usedImport', rulesKey.startsWith('import/'));
-    rulesToRemove.set('conflicts', basicPrettierConflicts.includes(rulesKey));
-    rulesToRemove.set('ts', tsEslintRecommendedRules.includes(rulesKey));
+  const filteredRules = Object.entries(eslintRules).filter(
+    ([rulesKey, rulesValue]) => {
+      const rulesToRemove = new Map([
+        ["off", rulesValue[0] === "off"],
+        ["usedImport", rulesKey.startsWith("import/")],
+        ["conflicts", basicPrettierConflicts.includes(rulesKey)],
+        ["ts", tsEslintRecommendedRules.includes(rulesKey)]
+      ]);
 
-    for (let [mapKey, mapValue] of rulesToRemove.entries()) {
-      if (mapValue) {
-        removedRulesLog[mapKey].push(rulesKey);
-        return;
+      for (let [key, value] of rulesToRemove.entries()) {
+        if (value) {
+          removedRulesLog[key].push(rulesKey);
+          break; // continue? test! should only save time not do much
+        }
       }
+      return [rulesKey, rulesValue];
     }
-    return [rulesKey, rulesValue];
-  });
-  return [eslintRules, removedRulesLog];
+  );
+  return [filteredRules, removedRulesLog];
 }
 
 const [newESLintConfig, removedOrModifiedRules] = filterRules(
@@ -113,16 +116,16 @@ const finalOutput = {
     es6: true
   },
   extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking'
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
-  parser: '@typescript-eslint/parser',
+  parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: './tsconfig.json'
+    project: "./tsconfig.json"
   },
-  plugins: ['@typescript-eslint'],
+  plugins: ["@typescript-eslint"],
   rules: newESLintConfig
 };
 
@@ -142,8 +145,8 @@ async function writeToDisk(fileName: string, data: string) {
  * ============================================================================
  */
 if (import.meta.main) {
-  writeToDisk('.eslintrc.json', JSON.stringify(finalOutput, null, 2));
-  writeToDisk('.eslintignore', eslintignore);
+  writeToDisk(".eslintrc.json", JSON.stringify(finalOutput, null, 2));
+  writeToDisk(".eslintignore", eslintignore);
   writeStatsToConsole(removedOrModifiedRules);
 }
 

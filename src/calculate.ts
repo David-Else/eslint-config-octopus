@@ -4,6 +4,9 @@ import { createRequire } from "../deps.ts";
 const require_ = createRequire(import.meta.url); // deno legacy module compatability
 const path = new URL("../", import.meta.url).pathname;
 
+const status = await Deno.permissions.query({ name: "write" });
+console.log(status.state);
+
 export type JsonWithoutNull =
   | string
   | number
@@ -63,41 +66,81 @@ export interface RemovedRulesLog {
   [key: string]: string[];
 }
 
-export function filterRules(
-  eslintRules: JsonWithoutNull
-): [JsonWithoutNull, RemovedRulesLog] {
-  const removedRulesLog: RemovedRulesLog = {
-    off: [],
-    usedImport: [],
-    conflicts: [],
-    ts: [],
-    modified: [] // << why can't we delete this?!
-  };
-
-  const filteredRules = Object.entries(eslintRules).filter(
-    ([rulesKey, rulesValue]) => {
-      const rulesToRemove = new Map([
-        ["off", rulesValue[0] === "off"],
-        ["usedImport", rulesKey.startsWith("import/")],
-        ["conflicts", basicPrettierConflicts.includes(rulesKey)],
-        ["ts", tsEslintRecommendedRules.includes(rulesKey)]
-      ]);
-
-      for (let [key, value] of rulesToRemove.entries()) {
-        if (value) {
-          removedRulesLog[key].push(rulesKey);
-          break; // continue? test! should only save time not do much
-        }
-      }
-      return [rulesKey, rulesValue];
-    }
-  );
-  return [filteredRules, removedRulesLog];
+///////////////////////////
+interface EslintRules {
+  [key: string]: any[];
 }
 
-const [newESLintConfig, removedOrModifiedRules] = filterRules(
-  entireEslintConfig.rules
+export const conditions = (key: string, val: any[]) =>
+  val[0] !== "off" &&
+  !key.startsWith("import/") &&
+  !basicPrettierConflicts.includes(key) &&
+  !tsEslintRecommendedRules.includes(key)
+    ? true
+    : false;
+
+export function filter2(
+  esLintRules: EslintRules,
+  conditionToAccept: { (key: string, val: any[]): boolean }
+): [EslintRules, string[]] {
+  const removedRules = [];
+  return [
+    Object.fromEntries(
+      Object.entries(esLintRules).filter(([key, val]) => {
+        if (conditionToAccept(key, val)) {
+          return true;
+        }
+        removedRules.push(key);
+        return false;
+      })
+    ),
+    removedRules
+  ];
+}
+
+// export function filterRules(
+//   eslintRules: JsonWithoutNull
+// ): [JsonWithoutNull, RemovedRulesLog] {
+//   const removedRulesLog: RemovedRulesLog = {
+//     off: [],
+//     usedImport: [],
+//     conflicts: [],
+//     ts: [],
+//     modified: [] // << why can't we delete this?!
+//   };
+
+//   const filteredRules = Object.entries(eslintRules).filter(
+//     ([rulesKey, rulesValue]) => {
+//       const rulesToRemove = new Map([
+//         ["off", rulesValue[0] === "off"],
+//         ["usedImport", rulesKey.startsWith("import/")],
+//         ["conflicts", basicPrettierConflicts.includes(rulesKey)],
+//         ["ts", tsEslintRecommendedRules.includes(rulesKey)]
+//       ]);
+
+//       for (let [key, value] of rulesToRemove.entries()) {
+//         if (value) {
+//           removedRulesLog[key].push(rulesKey);
+//           break; // continue? test! should only save time not do much
+//         }
+//       }
+//       return [rulesKey, rulesValue];
+//     }
+//   );
+//   return [filteredRules, removedRulesLog];
+// }
+
+// const [newESLintConfig, removedOrModifiedRules] = filterRules(
+//   entireEslintConfig.rules
+// );
+
+const [latestESLintConfig, removedRules] = filter2(
+  entireEslintConfig.rules,
+  conditions
 );
+
+console.log(`${removedRules.length} Removed
+${removedRules.map(ruleName => ruleName).join("\n")}`);
 
 /**
  * ============================================================================
@@ -126,7 +169,7 @@ const finalOutput = {
     project: "./tsconfig.json"
   },
   plugins: ["@typescript-eslint"],
-  rules: newESLintConfig
+  rules: latestESLintConfig
 };
 
 /**
@@ -147,7 +190,7 @@ async function writeToDisk(fileName: string, data: string) {
 if (import.meta.main) {
   writeToDisk(".eslintrc.json", JSON.stringify(finalOutput, null, 2));
   writeToDisk(".eslintignore", eslintignore);
-  writeStatsToConsole(removedOrModifiedRules);
+  // writeStatsToConsole(removedOrModifiedRules);
 }
 
 // dont forget deno types > lib.deno_runtime.d.ts

@@ -66,10 +66,14 @@ const testRules = {
 };
 
 // array of pure functions
-const rulesToRemove = [
-  [(key: string, value): boolean => value[0] === "off"],
-  [(key: string, value): boolean => key.startsWith("import/")],
-  [(key: string, value): boolean => basicPrettierConflicts.includes(key)]
+const rulesToRemove: ((
+  key: string,
+  value: any,
+  conflict?: string[] | undefined
+) => boolean)[][] = [
+  [(key, value, conflict?) => value[0] === "off"],
+  [(key, value, conflict?) => key.startsWith("import/")],
+  [(key, value, conflict?) => basicPrettierConflicts.includes(key)]
   // [(key: string, value): boolean => tsEslintRecommendedRules.includes(key)]
 ];
 
@@ -88,4 +92,49 @@ function removeEsLintRules(eslintRules: any, rulesToRemove: any) {
   return Object.fromEntries(newEsLintRules);
 }
 
-console.log(removeEsLintRules(testRules, rulesToRemove));
+console.log(
+  removeEsLintRules(testRules, rulesToRemove, basicPrettierConflicts)
+);
+// ty
+
+const x: {
+  "env": {
+      "es6": boolean;
+      "node": boolean;
+  };
+  "globals": {};
+  "parser": string;
+  "parserOptions": {
+      "ecmaVersion": number;
+      "sourceType": string;
+      "ecmaFeatures": {
+          "generators": boolean;
+          "objectLiteralDuplicateProperties": boolean;
+      };
+  };
+  "plugins": string[];
+  "rules": {
+      ...;
+  };
+  "settings": {
+      ...;
+  };
+  "ignorePatterns": string[];
+}
+
+
+const y: {
+  "brace-style": (string | {
+      "allowSingleLine": boolean;
+  })[];
+  "@typescript-eslint/brace-style": (string | {
+      "allowSingleLine": boolean;
+  })[];
+  "camelcase": (string | {
+      "properties": string;
+      "ignoreDestructuring": boolean;
+      "ignoreImports": boolean;
+  })[];
+
+} 
+= {}

@@ -98,42 +98,6 @@ export function filter2(
   ];
 }
 
-// export function filterRules(
-//   eslintRules: JsonWithoutNull
-// ): [JsonWithoutNull, RemovedRulesLog] {
-//   const removedRulesLog: RemovedRulesLog = {
-//     off: [],
-//     usedImport: [],
-//     conflicts: [],
-//     ts: [],
-//     modified: [] // << why can't we delete this?!
-//   };
-
-//   const filteredRules = Object.entries(eslintRules).filter(
-//     ([rulesKey, rulesValue]) => {
-//       const rulesToRemove = new Map([
-//         ["off", rulesValue[0] === "off"],
-//         ["usedImport", rulesKey.startsWith("import/")],
-//         ["conflicts", basicPrettierConflicts.includes(rulesKey)],
-//         ["ts", tsEslintRecommendedRules.includes(rulesKey)]
-//       ]);
-
-//       for (let [key, value] of rulesToRemove.entries()) {
-//         if (value) {
-//           removedRulesLog[key].push(rulesKey);
-//           break; // continue? test! should only save time not do much
-//         }
-//       }
-//       return [rulesKey, rulesValue];
-//     }
-//   );
-//   return [filteredRules, removedRulesLog];
-// }
-
-// const [newESLintConfig, removedOrModifiedRules] = filterRules(
-//   entireEslintConfig.rules
-// );
-
 const [latestESLintConfig, removedRules] = filter2(
   entireEslintConfig.rules,
   conditions

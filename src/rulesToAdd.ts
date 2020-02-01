@@ -15,8 +15,8 @@ export const v3RecommenedNoTypeInfo = {
 export const v3RecommenedTypeInfo = {
   '@typescript-eslint/no-floating-promises': 'error',
   '@typescript-eslint/no-implied-eval': 'error',
-  '@typescript-eslint/restrict-plus-operands': 'error',
-  '@typescript-eslint/restrict-template-expressions': 'error'
+  '@typescript-eslint/restrict-plus-operands': 'error'
+  // '@typescript-eslint/restrict-template-expressions': 'error'
 };
 
 export const personalPreferences = {

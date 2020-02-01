@@ -18,7 +18,10 @@ export async function runCommandReturnResults(command: string[]): Promise<any> {
  * Write output to disk
  * ============================================================================
  */
-export async function writeToDisk(fileName: string, data: string) {
+export async function writeToDisk(
+  fileName: string,
+  data: string
+): Promise<void> {
   const encoder = new TextEncoder();
   await Deno.writeFile(fileName, encoder.encode(data));
 }

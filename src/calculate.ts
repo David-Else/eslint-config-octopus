@@ -70,7 +70,7 @@ interface EslintRules {
   [key: string]: any[];
 }
 
-export const conditions = (key: string, val: any[]) =>
+export const conditions = (key: string, val: any[]): boolean =>
   !!(
     val[0] !== 'off' && // remove turned off rules
     !key.startsWith('import/') && // remove rules that use import plugin
@@ -114,7 +114,7 @@ const rulesToAdd = {
  * Output to the console the rules removed and to be added
  * ============================================================================
  */
-const bold = (text: string) => `\x1b[1m${text}\x1b[0m`;
+const bold = (text: string): string => `\x1b[1m${text}\x1b[0m`;
 
 console.log(`${bold(`${removedRuleNames.length}`)} Rules Removed:
 

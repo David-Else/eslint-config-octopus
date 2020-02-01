@@ -2,6 +2,11 @@ import { eslintConfig } from '../package.json';
 import { basicPrettierConflicts, additional } from './rulesToRemove.ts';
 import { createRequire } from '../deps.ts';
 import { runCommandReturnResults, writeToDisk } from './utils.ts';
+import {
+  v3RecommenedNoTypeInfo,
+  v3RecommenedTypeInfo,
+  personalPreferences
+} from './rulesToAdd.ts';
 
 const require = createRequire(import.meta.url); // deno legacy module compatability
 const path = new URL('../', import.meta.url).pathname;
@@ -98,9 +103,15 @@ const [filteredEsLintRules, removedRuleNames] = ruleFilter(
   conditions
 );
 
+const rulesToAdd = {
+  ...v3RecommenedNoTypeInfo,
+  ...v3RecommenedTypeInfo,
+  ...personalPreferences
+};
+
 /**
  * ============================================================================
- * Output to the console the rules removed
+ * Output to the console the rules removed and to be added
  * ============================================================================
  */
 const bold = (text: string) => `\x1b[1m${text}\x1b[0m`;
@@ -108,6 +119,13 @@ const bold = (text: string) => `\x1b[1m${text}\x1b[0m`;
 console.log(`${bold(`${removedRuleNames.length}`)} Rules Removed:
 
 ${removedRuleNames.map(ruleName => ruleName).join('\n')}
+
+${bold(`${Object.entries(rulesToAdd).length}`)} Rules Added:
+
+${Object.entries(rulesToAdd)
+  .map(ruleName => ruleName)
+  .join('\n')}
+
 `);
 
 /**
@@ -138,7 +156,7 @@ const eslintrcJson = {
     project: './tsconfig.json'
   },
   plugins: ['@typescript-eslint'],
-  rules: filteredEsLintRules
+  rules: { ...filteredEsLintRules, ...rulesToAdd }
 };
 
 /**

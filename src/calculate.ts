@@ -123,9 +123,8 @@ ${removedRuleNames.map(ruleName => ruleName).join('\n')}
 ${bold(`${Object.entries(rulesToAdd).length}`)} Rules Added:
 
 ${Object.entries(rulesToAdd)
-  .map(ruleName => ruleName)
+  .map(ruleName => ruleName[0])
   .join('\n')}
-
 `);
 
 /**

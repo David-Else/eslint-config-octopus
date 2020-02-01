@@ -806,6 +806,23 @@
     "@typescript-eslint/prefer-readonly": "error",
     "@typescript-eslint/unified-signatures": "error",
     "@typescript-eslint/prefer-nullish-coalescing": "error",
-    "@typescript-eslint/prefer-optional-chain": "error"
+    "@typescript-eslint/prefer-optional-chain": "error",
+    "complexity": [
+      "error",
+      10
+    ],
+    "max-lines-per-function": [
+      "error",
+      {
+        "max": 50,
+        "skipBlankLines": true,
+        "skipComments": true,
+        "IIFEs": true
+      }
+    ],
+    "max-params": [
+      "error",
+      3
+    ]
   }
 }

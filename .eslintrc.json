@@ -95,6 +95,18 @@
         "allowParens": true
       }
     ],
+    "no-const-assign": [
+      "error"
+    ],
+    "no-dupe-class-members": [
+      "error"
+    ],
+    "no-new-symbol": [
+      "error"
+    ],
+    "no-this-before-super": [
+      "error"
+    ],
     "no-useless-computed-key": [
       "error"
     ],
@@ -238,6 +250,9 @@
       "error"
     ],
     "no-shadow-restricted-names": [
+      "error"
+    ],
+    "no-undef": [
       "error"
     ],
     "no-undef-init": [
@@ -449,6 +464,12 @@
     "for-direction": [
       "error"
     ],
+    "getter-return": [
+      "error",
+      {
+        "allowImplicit": true
+      }
+    ],
     "no-async-promise-executor": [
       "error"
     ],
@@ -462,9 +483,6 @@
       "error",
       "always"
     ],
-    "no-console": [
-      "warn"
-    ],
     "no-constant-condition": [
       "warn"
     ],
@@ -472,6 +490,12 @@
       "error"
     ],
     "no-debugger": [
+      "error"
+    ],
+    "no-dupe-args": [
+      "error"
+    ],
+    "no-dupe-keys": [
       "error"
     ],
     "no-duplicate-case": [
@@ -522,6 +546,9 @@
     "no-unexpected-multiline": [
       "error"
     ],
+    "no-unreachable": [
+      "error"
+    ],
     "no-unsafe-finally": [
       "error"
     ],
@@ -530,6 +557,12 @@
     ],
     "use-isnan": [
       "error"
+    ],
+    "valid-typeof": [
+      "error",
+      {
+        "requireStringLiterals": true
+      }
     ],
     "array-callback-return": [
       "error",
@@ -675,6 +708,9 @@
       }
     ],
     "no-proto": [
+      "error"
+    ],
+    "no-redeclare": [
       "error"
     ],
     "no-restricted-properties": [

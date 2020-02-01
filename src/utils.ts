@@ -4,9 +4,9 @@
  * ============================================================================
  */
 export async function runCommandReturnResults(command: string[]): Promise<any> {
-  let p = Deno.run({
+  const p = Deno.run({
     args: command,
-    stdout: "piped"
+    stdout: 'piped'
   });
   const commandOutput = await Deno.readAll(p.stdout!);
   const text = new TextDecoder().decode(commandOutput);

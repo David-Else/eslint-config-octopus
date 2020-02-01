@@ -1,9 +1,9 @@
 import { eslintConfig } from '../package.json';
-import { basicPrettierConflicts } from './rulesToRemove.ts';
+import { basicPrettierConflicts, additional } from './rulesToRemove.ts';
 import { createRequire } from '../deps.ts';
 import { runCommandReturnResults, writeToDisk } from './utils.ts';
 
-const require_ = createRequire(import.meta.url); // deno legacy module compatability
+const require = createRequire(import.meta.url); // deno legacy module compatability
 const path = new URL('../', import.meta.url).pathname;
 
 /**
@@ -21,9 +21,8 @@ const path = new URL('../', import.meta.url).pathname;
  * ============================================================================
  */
 const tsEslintRecommendedRules = Object.keys(
-  require_(
-    '../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js'
-  ).default.overrides[0].rules
+  require('../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js')
+    .default.overrides[0].rules
 );
 
 /**
@@ -67,12 +66,13 @@ interface EslintRules {
 }
 
 export const conditions = (key: string, val: any[]) =>
-  val[0] !== 'off' && // remove turned off rules
-  !key.startsWith('import/') && // remove rules that use import plugin
-  !basicPrettierConflicts.includes(key) && // remove rules that conflict with prettier
-  !tsEslintRecommendedRules.includes(key) // remove 'eslint-recommended' rules
-    ? true
-    : false;
+  !!(
+    val[0] !== 'off' && // remove turned off rules
+    !key.startsWith('import/') && // remove rules that use import plugin
+    !basicPrettierConflicts.includes(key) && // remove rules that conflict with prettier
+    !tsEslintRecommendedRules.includes(key) &&
+    !additional.includes(key)
+  );
 
 export function ruleFilter(
   esLintRules: EslintRules,
@@ -149,5 +149,5 @@ const eslintrcJson = {
 if (import.meta.main) {
   writeToDisk('.eslintrc.json', JSON.stringify(eslintrcJson, null, 2));
   writeToDisk('.eslintignore', eslintignore);
-  console.log(`${bold(`.eslintrc.json`)} file created`);
+  console.log(`${bold('.eslintrc.json')} file created`);
 }

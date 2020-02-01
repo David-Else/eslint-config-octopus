@@ -53,8 +53,12 @@ export const basicPrettierConflicts = [
   'yield-star-spacing'
 ];
 
+export const additional = ['no-console'];
+
+// TODO
 export const conflictingOptions = ['curly', 'no-confusing-arrow'];
 
+// TODO
 export const cantBeChecked = [
   '@typescript-eslint/quotes',
   'arrow-body-style',

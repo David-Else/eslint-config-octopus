@@ -1,37 +1,23 @@
+import { eslintConfig } from "../package.json";
 import { basicPrettierConflicts } from "./rulesToRemove.ts";
-import { writeStatsToConsole } from "./view.ts";
 import { createRequire } from "../deps.ts";
+import { runCommandReturnResults, writeToDisk } from "./utils.ts";
+
 const require_ = createRequire(import.meta.url); // deno legacy module compatability
 const path = new URL("../", import.meta.url).pathname;
 
-const status = await Deno.permissions.query({ name: "write" });
-console.log(status.state);
-
-export type JsonWithoutNull =
-  | string
-  | number
-  | boolean
-  | { [property: string]: JsonWithoutNull }
-  | JsonWithoutNull[];
-
 /**
  * ============================================================================
- * Execute CLI command with optional arguments and return the results
- * ============================================================================
- */
-async function runCommandReturnResults(command: string[]) {
-  let p = Deno.run({
-    args: command,
-    stdout: "piped"
-  });
-  const commandOutput = await Deno.readAll(p.stdout!);
-  const text = new TextDecoder().decode(commandOutput);
-  return JSON.parse(text);
-}
-
-/**
- * ============================================================================
- * Import and generate files with rules from NPM dependencies
+ * Import typescript-eslint 'eslint-recommended' rules direct from NPM package
+ *
+ * The eslint-recommended ruleset is meant to be used after extending
+ * eslint:recommended. It disables rules that are already checked by the
+ * TypeScript compiler and enables rules that promote using the more modern
+ * constructs TypeScript allows for
+ *
+ * We are going to include these in the final config, so we import them here to
+ * delete them from the `eslint-config-airbnb-typescript` rules to give them
+ * precidence and avoid duplication
  * ============================================================================
  */
 const tsEslintRecommendedRules = Object.keys(
@@ -40,7 +26,27 @@ const tsEslintRecommendedRules = Object.keys(
   ).default.overrides[0].rules
 );
 
-// ERROR once a .eslintrc in ./ is created it reads that and not package.json!
+/**
+ * ============================================================================
+ * Create obj that contains all the rules for eslint-config-airbnb-typescript
+ *
+ * This is done by running eslint on the command line with `--print-config`
+ * Eslint looks at package.json for the config that points to
+ * `airbnb-typescript/base`, so we confirm that is correct before proceeding
+ *
+ * The only dependency is the the `import` plugin, but we will strip that out
+ * so we only need a single text file with zero dependencies
+ * ============================================================================
+ */
+if (
+  eslintConfig.extends.length > 1 ||
+  eslintConfig.extends[0] !== "airbnb-typescript/base"
+) {
+  throw new Error(
+    'Your package.json "eslintConfig" should only extend "airbnb-typescript/base"'
+  );
+}
+
 const entireEslintConfig = await runCommandReturnResults([
   "npx",
   "eslint",
@@ -56,30 +62,19 @@ const entireEslintConfig = await runCommandReturnResults([
  * Create the new final list of rules by filering out ones we don't want
  * ============================================================================
  */
-// split this into removed AND modified list and make modified work
-export interface RemovedRulesLog {
-  off: string[];
-  usedImport: string[];
-  conflicts: string[];
-  ts: string[];
-  // modified: string[];
-  [key: string]: string[];
-}
-
-///////////////////////////
 interface EslintRules {
   [key: string]: any[];
 }
 
 export const conditions = (key: string, val: any[]) =>
-  val[0] !== "off" &&
-  !key.startsWith("import/") &&
-  !basicPrettierConflicts.includes(key) &&
-  !tsEslintRecommendedRules.includes(key)
+  val[0] !== "off" && // remove turned off rules
+  !key.startsWith("import/") && // remove rules that use import plugin
+  !basicPrettierConflicts.includes(key) && // remove rules that conflict with prettier
+  !tsEslintRecommendedRules.includes(key) // remove 'eslint-recommended' rules
     ? true
     : false;
 
-export function filter2(
+export function ruleFilter(
   esLintRules: EslintRules,
   conditionToAccept: { (key: string, val: any[]): boolean }
 ): [EslintRules, string[]] {
@@ -98,17 +93,27 @@ export function filter2(
   ];
 }
 
-const [latestESLintConfig, removedRules] = filter2(
+const [filteredEsLintRules, removedRuleNames] = ruleFilter(
   entireEslintConfig.rules,
   conditions
 );
 
-console.log(`${removedRules.length} Removed
-${removedRules.map(ruleName => ruleName).join("\n")}`);
+/**
+ * ============================================================================
+ * Output to the console the rules removed
+ * ============================================================================
+ */
+const bold = (text: string) => `\x1b[1m${text}\x1b[0m`;
+
+console.log(`${bold(`${removedRuleNames.length}`)} Rules Removed:
+
+${removedRuleNames.map(ruleName => ruleName).join("\n")}
+`);
 
 /**
  * ============================================================================
- * Define the objects we are going to write to disk
+ * Build the config files we are going to write to disk
+ * * note anything in the `rules` section will overwrite the `extends` section
  * ============================================================================
  */
 const eslintignore = `# don't ever lint node_modules
@@ -117,7 +122,7 @@ node_modules
 dist
 .eslintrc.json`;
 
-const finalOutput = {
+const eslintrcJson = {
   env: {
     browser: true,
     es6: true
@@ -133,28 +138,16 @@ const finalOutput = {
     project: "./tsconfig.json"
   },
   plugins: ["@typescript-eslint"],
-  rules: latestESLintConfig
+  rules: filteredEsLintRules
 };
 
 /**
  * ============================================================================
- * Write output to disk
- * ============================================================================
- */
-async function writeToDisk(fileName: string, data: string) {
-  const encoder = new TextEncoder();
-  await Deno.writeFile(fileName, encoder.encode(data));
-}
-
-/**
- * ============================================================================
- * Write information on removed rules to the console
+ * If we are running this file directly on the CLI then write the files
  * ============================================================================
  */
 if (import.meta.main) {
-  writeToDisk(".eslintrc.json", JSON.stringify(finalOutput, null, 2));
+  writeToDisk(".eslintrc.json", JSON.stringify(eslintrcJson, null, 2));
   writeToDisk(".eslintignore", eslintignore);
-  // writeStatsToConsole(removedOrModifiedRules);
+  console.log(`${bold(`.eslintrc.json`)} file created`);
 }
-
-// dont forget deno types > lib.deno_runtime.d.ts

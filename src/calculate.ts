@@ -1,10 +1,10 @@
-import { eslintConfig } from "../package.json";
-import { basicPrettierConflicts } from "./rulesToRemove.ts";
-import { createRequire } from "../deps.ts";
-import { runCommandReturnResults, writeToDisk } from "./utils.ts";
+import { eslintConfig } from '../package.json';
+import { basicPrettierConflicts } from './rulesToRemove.ts';
+import { createRequire } from '../deps.ts';
+import { runCommandReturnResults, writeToDisk } from './utils.ts';
 
 const require_ = createRequire(import.meta.url); // deno legacy module compatability
-const path = new URL("../", import.meta.url).pathname;
+const path = new URL('../', import.meta.url).pathname;
 
 /**
  * ============================================================================
@@ -22,7 +22,7 @@ const path = new URL("../", import.meta.url).pathname;
  */
 const tsEslintRecommendedRules = Object.keys(
   require_(
-    "../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js"
+    '../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js'
   ).default.overrides[0].rules
 );
 
@@ -40,7 +40,7 @@ const tsEslintRecommendedRules = Object.keys(
  */
 if (
   eslintConfig.extends.length > 1 ||
-  eslintConfig.extends[0] !== "airbnb-typescript/base"
+  eslintConfig.extends[0] !== 'airbnb-typescript/base'
 ) {
   throw new Error(
     'Your package.json "eslintConfig" should only extend "airbnb-typescript/base"'
@@ -48,13 +48,13 @@ if (
 }
 
 const entireEslintConfig = await runCommandReturnResults([
-  "npx",
-  "eslint",
-  "--no-eslintrc",
-  "-c",
+  'npx',
+  'eslint',
+  '--no-eslintrc',
+  '-c',
   `${path}/package.json`,
-  "--print-config",
-  "example.js"
+  '--print-config',
+  'example.js'
 ]);
 
 /**
@@ -67,8 +67,8 @@ interface EslintRules {
 }
 
 export const conditions = (key: string, val: any[]) =>
-  val[0] !== "off" && // remove turned off rules
-  !key.startsWith("import/") && // remove rules that use import plugin
+  val[0] !== 'off' && // remove turned off rules
+  !key.startsWith('import/') && // remove rules that use import plugin
   !basicPrettierConflicts.includes(key) && // remove rules that conflict with prettier
   !tsEslintRecommendedRules.includes(key) // remove 'eslint-recommended' rules
     ? true
@@ -107,7 +107,7 @@ const bold = (text: string) => `\x1b[1m${text}\x1b[0m`;
 
 console.log(`${bold(`${removedRuleNames.length}`)} Rules Removed:
 
-${removedRuleNames.map(ruleName => ruleName).join("\n")}
+${removedRuleNames.map(ruleName => ruleName).join('\n')}
 `);
 
 /**
@@ -128,16 +128,16 @@ const eslintrcJson = {
     es6: true
   },
   extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking'
   ],
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: "./tsconfig.json"
+    project: './tsconfig.json'
   },
-  plugins: ["@typescript-eslint"],
+  plugins: ['@typescript-eslint'],
   rules: filteredEsLintRules
 };
 
@@ -147,7 +147,7 @@ const eslintrcJson = {
  * ============================================================================
  */
 if (import.meta.main) {
-  writeToDisk(".eslintrc.json", JSON.stringify(eslintrcJson, null, 2));
-  writeToDisk(".eslintignore", eslintignore);
+  writeToDisk('.eslintrc.json', JSON.stringify(eslintrcJson, null, 2));
+  writeToDisk('.eslintignore', eslintignore);
   console.log(`${bold(`.eslintrc.json`)} file created`);
 }

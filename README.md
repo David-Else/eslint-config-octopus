@@ -1,6 +1,9 @@
 # automatic-eslint-rule-generator (work in progress, beta)
 
-Automatically create an `.eslintrc.json` file that contains not only the latest configuration and recommend rules for `typescript-eslint` but also the entire set of airbnb rules modified for typescript with all the rules that conflict with Prettier removed... all optimized with unused/conflicting rules removed.
+Automatically create an `.eslintrc.json` file that contains not only the latest configuration and recommend rules for `typescript-eslint` but also the entire set of airbnb base rules modified for typescript with all the rules that conflict with Prettier removed... all optimized with unused/conflicting rules removed.
+
+https://github.com/airbnb/javascript
+https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb-base
 
 This `.eslintrc.json` is then all you need, no need to install any additional dependencies, you can just copy it into each new project. It is completely self contained. If there are any updates to the `eslint-config-airbnb-typescript` and `eslint-config-prettier` packages you can run the script again and regenerate the whole config.
 

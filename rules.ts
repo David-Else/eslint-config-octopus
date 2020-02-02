@@ -1,5 +1,5 @@
 import { createRequire } from './deps.ts';
-const require = createRequire(import.meta.url); // deno legacy module compatability
+const denoRequire = createRequire(import.meta.url); // deno legacy module compatability
 
 /**
  * ============================================================================
@@ -11,6 +11,12 @@ const require = createRequire(import.meta.url); // deno legacy module compatabil
  * constructs TypeScript allows for
  * ============================================================================
  */
+
+const testy = denoRequire(
+  './node_modules/eslint-config-airbnb-typescript/base.js'
+);
+console.log(testy);
+
 export const rules = {
   add: {
     v3RecommenedNoTypeInfo: {
@@ -52,8 +58,9 @@ export const rules = {
   },
   remove: {
     tsEslintRecommendedRules: Object.keys(
-      require('./node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js')
-        .default.overrides[0].rules
+      denoRequire(
+        './node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js'
+      ).default.overrides[0].rules
     ),
     basicPrettierConflicts: [
       '@typescript-eslint/brace-style',

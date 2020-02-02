@@ -3,26 +3,12 @@ const require = createRequire(import.meta.url); // deno legacy module compatabil
 
 /**
  * ============================================================================
- * Import typescript-eslint 'eslint-recommended' rules direct from NPM package
+ * Rules to add/remove from original eslint-config-airbnb-typescript export
  *
  * The eslint-recommended ruleset is meant to be used after extending
  * eslint:recommended. It disables rules that are already checked by the
  * TypeScript compiler and enables rules that promote using the more modern
  * constructs TypeScript allows for
- *
- * We are going to include these in the final config, so we import them here to
- * delete them from the `eslint-config-airbnb-typescript` rules to give them
- * precidence and avoid duplication
- * ============================================================================
- */
-const tsEslintRecommendedRules = Object.keys(
-  require('../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js')
-    .default.overrides[0].rules
-);
-
-/**
- * ============================================================================
- * Rules to add/remove from original eslint-config-airbnb-typescript export
  * ============================================================================
  */
 export const rules = {
@@ -65,7 +51,10 @@ export const rules = {
     }
   },
   remove: {
-    tslintRecommended: tsEslintRecommendedRules,
+    tsEslintRecommendedRules: Object.keys(
+      require('../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js')
+        .default.overrides[0].rules
+    ),
     basicPrettierConflicts: [
       '@typescript-eslint/brace-style',
       '@typescript-eslint/func-call-spacing',

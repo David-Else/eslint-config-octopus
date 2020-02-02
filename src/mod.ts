@@ -6,7 +6,6 @@
  * @version 0.8
  */
 
-import { eslintConfig } from '../package.json';
 import { basicPrettierConflicts, additional } from './rulesToRemove.ts';
 import { createRequire } from '../deps.ts';
 import { runCommandReturnResults, writeToDisk } from './utils.ts';
@@ -44,20 +43,12 @@ const tsEslintRecommendedRules = Object.keys(
  *
  * This is done by running eslint on the command line with `--print-config`
  * Eslint looks at package.json for the config that points to
- * `airbnb-typescript/base`, so we confirm that is correct before proceeding
+ * `airbnb-typescript/base`, so DON'T change that!
  *
  * The only dependency is the the `import` plugin, but we will strip that out
  * so we only need a single text file with zero dependencies
  * ============================================================================
  */
-if (
-  eslintConfig.extends.length > 1 ||
-  eslintConfig.extends[0] !== 'airbnb-typescript/base'
-) {
-  throw new Error(
-    'Your package.json "eslintConfig" should only extend "airbnb-typescript/base"'
-  );
-}
 
 const entireEslintConfig = await runCommandReturnResults([
   'npx',

@@ -47,7 +47,7 @@ export const conditions = (key: string, val: any[]): boolean =>
   !!(
     val[0] !== 'off' && // remove turned off rules
     !key.startsWith('import/') && // remove rules that use import plugin
-    !rules.remove.basicPrettierConflicts.includes(key) && // remove rules that conflict with prettier
+    !rules.remove.basicPrettierConflicts.includes(key) && // remove rules conflicting with prettier
     !rules.remove.tsEslintRecommendedRules.includes(key) &&
     !rules.remove.additional.includes(key)
   );

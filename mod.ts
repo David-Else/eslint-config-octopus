@@ -23,7 +23,7 @@ import { runCommandReturnResults, writeToDisk } from './utils.ts';
  * so we only need a single text file with zero dependencies
  * ============================================================================
  */
-const path = new URL('../', import.meta.url).pathname;
+const path = new URL('./', import.meta.url).pathname;
 const entireEslintConfig = await runCommandReturnResults([
   'npx',
   'eslint',

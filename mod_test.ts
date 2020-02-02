@@ -1,6 +1,6 @@
-import { assertEquals } from '../deps.ts';
-import { test, runTests } from '../deps.ts';
-import { ruleFilter, conditions } from '../src/mod.ts';
+import { assertEquals } from './deps.ts';
+import { test, runTests } from './deps.ts';
+import { ruleFilter, conditions } from './mod.ts';
 
 test({
   name: 'turned off rules removed',

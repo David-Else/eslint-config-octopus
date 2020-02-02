@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "print-prettier-conflicting-rules": "eslint --print-config app.js | eslint-config-prettier-check",
-    "test": "deno test test/ --allow-env --allow-write --allow-net --allow-run",
-    "run": "deno --allow-read --allow-write --allow-run src/mod.ts"
+    "test": "deno test mod_test.ts --allow-env --allow-write --allow-net --allow-run",
+    "run": "deno --allow-read --allow-write --allow-run mod.ts"
   },
   "eslintConfig": {
     "extends": [

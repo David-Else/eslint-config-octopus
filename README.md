@@ -22,10 +22,10 @@ Dependencies : https://deno.land/ deno executable << AMAZING!
 
 ## To create .eslintrc.json config with config and rules:
 
-`deno --allow-read --allow-write --allow-run src/mod.ts`
+`deno --allow-read --allow-write --allow-run mod.ts`
 
 or run tests:
 
-`deno test test/ --allow-env --allow-write --allow-net --allow-run`
+`deno test mod_test.ts --allow-env --allow-write --allow-net --allow-run`
 
 Some prettier conflicting rules are hard coded in `rulesToRemove/basicPrettierConflicts`, to re-generate them from the latest version of `eslint-config-prettier` run `npm run print-prettier-conflicting-rules`. These would need to be manually copied across.

@@ -1,4 +1,4 @@
-import { createRequire } from '../deps.ts';
+import { createRequire } from './deps.ts';
 const require = createRequire(import.meta.url); // deno legacy module compatability
 
 /**
@@ -52,7 +52,7 @@ export const rules = {
   },
   remove: {
     tsEslintRecommendedRules: Object.keys(
-      require('../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js')
+      require('./node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js')
         .default.overrides[0].rules
     ),
     basicPrettierConflicts: [

@@ -4,38 +4,12 @@
  * @copyright 2020 David Else
  * @license gpl-3.0
  * @version 0.8
+ *
+ * deno --allow-read --allow-write --allow-run src/mod.ts
  */
 
-import { basicPrettierConflicts, additional } from './rulesToRemove.ts';
-import { createRequire } from '../deps.ts';
+import { rules } from './rules.ts';
 import { runCommandReturnResults, writeToDisk } from './utils.ts';
-import {
-  v3RecommenedNoTypeInfo,
-  v3RecommenedTypeInfo,
-  personalPreferences
-} from './rulesToAdd.ts';
-
-const require = createRequire(import.meta.url); // deno legacy module compatability
-const path = new URL('../', import.meta.url).pathname;
-
-/**
- * ============================================================================
- * Import typescript-eslint 'eslint-recommended' rules direct from NPM package
- *
- * The eslint-recommended ruleset is meant to be used after extending
- * eslint:recommended. It disables rules that are already checked by the
- * TypeScript compiler and enables rules that promote using the more modern
- * constructs TypeScript allows for
- *
- * We are going to include these in the final config, so we import them here to
- * delete them from the `eslint-config-airbnb-typescript` rules to give them
- * precidence and avoid duplication
- * ============================================================================
- */
-const tsEslintRecommendedRules = Object.keys(
-  require('../node_modules/@typescript-eslint/eslint-plugin/dist/configs/eslint-recommended.js')
-    .default.overrides[0].rules
-);
 
 /**
  * ============================================================================
@@ -49,7 +23,7 @@ const tsEslintRecommendedRules = Object.keys(
  * so we only need a single text file with zero dependencies
  * ============================================================================
  */
-
+const path = new URL('../', import.meta.url).pathname;
 const entireEslintConfig = await runCommandReturnResults([
   'npx',
   'eslint',
@@ -73,9 +47,9 @@ export const conditions = (key: string, val: any[]): boolean =>
   !!(
     val[0] !== 'off' && // remove turned off rules
     !key.startsWith('import/') && // remove rules that use import plugin
-    !basicPrettierConflicts.includes(key) && // remove rules that conflict with prettier
-    !tsEslintRecommendedRules.includes(key) &&
-    !additional.includes(key)
+    !rules.remove.basicPrettierConflicts.includes(key) && // remove rules that conflict with prettier
+    !rules.remove.tslintRecommended.includes(key) &&
+    !rules.remove.additional.includes(key)
   );
 
 export function ruleFilter(
@@ -103,9 +77,9 @@ const [filteredEsLintRules, removedRuleNames] = ruleFilter(
 );
 
 const rulesToAdd = {
-  ...v3RecommenedNoTypeInfo,
-  ...v3RecommenedTypeInfo,
-  ...personalPreferences
+  ...rules.add.v3RecommenedNoTypeInfo,
+  ...rules.add.v3RecommenedTypeInfoNeeded,
+  ...rules.add.personalPreferences
 };
 
 /**

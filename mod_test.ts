@@ -54,5 +54,3 @@ test({
 });
 
 runTests();
-
-// deno test test/ --allow-env --allow-write --allow-net --allow-run

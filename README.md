@@ -22,7 +22,7 @@ Dependencies : https://deno.land/ deno executable << AMAZING!
 
 ## To create .eslintrc.json config with config and rules:
 
-`deno --allow-read --allow-write --allow-run src/calculate.ts`
+`deno --allow-read --allow-write --allow-run src/mod.ts`
 
 or run tests:
 

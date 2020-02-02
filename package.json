@@ -6,7 +6,7 @@
   "scripts": {
     "print-prettier-conflicting-rules": "eslint --print-config app.js | eslint-config-prettier-check",
     "test": "deno test test/ --allow-env --allow-write --allow-net --allow-run",
-    "run": "deno --allow-read --allow-write --allow-run src/calculate.ts"
+    "run": "deno --allow-read --allow-write --allow-run src/mod.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -22,7 +22,7 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb-typescript": "^6.3.1",
     "eslint-config-prettier": "^6.10.0",
-    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-import": "^2.20.1",
     "typescript": "^3.7.5"
   }
 }

@@ -1,3 +1,11 @@
+/**
+ * @file Creates a .eslintrc.json config file for typescript-eslint with rules
+ * @author David Else <david@elsewebdevelopment.com>
+ * @copyright 2020 David Else
+ * @license gpl-3.0
+ * @version 0.8
+ */
+
 import { eslintConfig } from '../package.json';
 import { basicPrettierConflicts, additional } from './rulesToRemove.ts';
 import { createRequire } from '../deps.ts';

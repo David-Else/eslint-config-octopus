@@ -3,3 +3,4 @@ pnpm-lock.yaml
 old-code
 .eslintcache
 .eslintrc.json
+.vscode

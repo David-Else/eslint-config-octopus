@@ -129,12 +129,6 @@ ${Object.entries(rulesToAdd)
  * * note anything in the `rules` section will overwrite the `extends` section
  * ============================================================================
  */
-const eslintignore = `# don't ever lint node_modules
-node_modules
-# don't lint build output (make sure it's set to your correct build folder name)
-dist
-.eslintrc.json`;
-
 const extendsConfigWithTypes = [
   'eslint:recommended',
   'plugin:@typescript-eslint/eslint-recommended',
@@ -172,6 +166,5 @@ const eslintrcJson = {
  */
 if (import.meta.main) {
   writeToDisk('.eslintrc.json', JSON.stringify(eslintrcJson, null, 2));
-  writeToDisk('.eslintignore', eslintignore);
   console.log(`${bold('.eslintrc.json')} file created`);
 }

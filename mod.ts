@@ -10,6 +10,30 @@
 
 import { rules } from './rules.ts';
 import { runCommandReturnResults, writeToDisk } from './utils.ts';
+import { BufReader } from './deps.ts';
+
+interface EslintRules {
+  [key: string]: any[];
+}
+
+/**
+ * ============================================================================
+ * Read user input
+ * ============================================================================
+ */
+if (import.meta.main) {
+  const stdinReader = new BufReader(Deno.stdin);
+
+  console.log('Welcome to the eslint rule thingie');
+
+  console.log('Would you like to use the eslint airbnb rules? Y/n:');
+  const isAirbnb = ((await stdinReader.readString('\n')) as string).trim();
+
+  console.log('Would you like to use types in your rules? Y/n:');
+  const isTypes = ((await stdinReader.readString('\n')) as string).trim();
+
+  console.log(`Using AIRBNB: ${isAirbnb} Using TYPES: ${isTypes}`);
+}
 
 /**
  * ============================================================================
@@ -23,6 +47,7 @@ import { runCommandReturnResults, writeToDisk } from './utils.ts';
  * so we only need a single text file with zero dependencies
  * ============================================================================
  */
+
 const path = new URL('./', import.meta.url).pathname;
 const entireEslintConfig = await runCommandReturnResults([
   'npx',
@@ -39,9 +64,7 @@ const entireEslintConfig = await runCommandReturnResults([
  * Create the new final list of rules by filering out ones we don't want
  * ============================================================================
  */
-interface EslintRules {
-  [key: string]: any[];
-}
+
 // use key: keyof typeof and const
 export const conditions = (key: string, val: any[]): boolean =>
   !!(
@@ -112,23 +135,34 @@ node_modules
 dist
 .eslintrc.json`;
 
+const extendsConfigWithTypes = [
+  'eslint:recommended',
+  'plugin:@typescript-eslint/eslint-recommended',
+  'plugin:@typescript-eslint/recommended',
+  'plugin:@typescript-eslint/recommended-requiring-type-checking'
+];
+
+const extendsConfigWithoutTypes = [
+  'eslint:recommended',
+  'plugin:@typescript-eslint/eslint-recommended',
+  'plugin:@typescript-eslint/recommended'
+];
+
+const rulesWithAirBnB = { ...filteredEsLintRules, ...rulesToAdd };
+const rulesWithoutAirBnB = { ...rulesToAdd };
+
 const eslintrcJson = {
   env: {
     browser: true,
     es6: true
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking'
-  ],
+  extends: extendsConfigWithTypes,
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: './tsconfig.json'
   },
   plugins: ['@typescript-eslint'],
-  rules: { ...filteredEsLintRules, ...rulesToAdd }
+  rules: rulesWithAirBnB
 };
 
 /**

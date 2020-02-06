@@ -12,10 +12,10 @@ const denoRequire = createRequire(import.meta.url); // deno legacy module compat
  * ============================================================================
  */
 
-const testy = denoRequire(
-  './node_modules/eslint-config-airbnb-typescript/base.js'
-);
-console.log(testy);
+// const testy = denoRequire(
+//   './node_modules/eslint-config-airbnb-typescript/base.js'
+// );
+// console.log(testy);
 
 export const rules = {
   add: {

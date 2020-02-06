@@ -42,7 +42,7 @@ const entireEslintConfig = await runCommandReturnResults([
 interface EslintRules {
   [key: string]: any[];
 }
-
+// use key: keyof typeof and const
 export const conditions = (key: string, val: any[]): boolean =>
   !!(
     val[0] !== 'off' && // remove turned off rules

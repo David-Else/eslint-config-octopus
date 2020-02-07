@@ -10,7 +10,7 @@
 
 import { rules } from './rules.ts';
 import { runCommandReturnResults, writeToDisk } from './utils.ts';
-import { BufReader, green } from './deps.ts';
+import { BufReader, green, bold } from './deps.ts';
 
 interface EslintRules {
   [key: string]: any[];
@@ -21,20 +21,38 @@ interface EslintRules {
  * Read user input
  * ============================================================================
  */
+
+// ERROR check in console input!
 async function consoleInput(stdinReader: any): Promise<string> {
   return ((await stdinReader.readString('\n')) as string).trim();
 }
 
 if (import.meta.main) {
   const stdinReader = new BufReader(Deno.stdin);
+  console.clear();
+  console.log(`${bold(`Welcome to the eslint rule thingie
+  `)}
+Would you like to use the eslint airbnb rules? Y/n:`);
 
-  console.log('Welcome to the eslint rule thingie');
-
-  console.log('Would you like to use the eslint airbnb rules? Y/n:');
   const isAirbnb = await consoleInput(stdinReader);
 
   console.log('Would you like to use types in your rules? Y/n:');
   const isTypes = await consoleInput(stdinReader);
+
+  // temp nonsense example to refactor into consoleInput()
+  // look here https://deno.land/std/io/bufio_test.ts
+  const options = new Set(['y', 'Y', 'n', 'N', '']);
+  if (!options.has(isAirbnb)) {
+    throw new Error('Please enter valid option');
+  } else {
+    console.log('Sorted!');
+  }
+
+  if (!options.has(isTypes)) {
+    throw new Error('Please enter valid option');
+  } else {
+    console.log('Sorted!');
+  }
 }
 
 /**

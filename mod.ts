@@ -10,7 +10,7 @@
 
 import { rules } from './rules.ts';
 import { runCommandReturnResults, writeToDisk } from './utils.ts';
-import { BufReader } from './deps.ts';
+import { BufReader, green } from './deps.ts';
 
 interface EslintRules {
   [key: string]: any[];
@@ -21,18 +21,20 @@ interface EslintRules {
  * Read user input
  * ============================================================================
  */
+async function consoleInput(stdinReader: any): Promise<string> {
+  return ((await stdinReader.readString('\n')) as string).trim();
+}
+
 if (import.meta.main) {
   const stdinReader = new BufReader(Deno.stdin);
 
   console.log('Welcome to the eslint rule thingie');
 
   console.log('Would you like to use the eslint airbnb rules? Y/n:');
-  const isAirbnb = ((await stdinReader.readString('\n')) as string).trim();
+  const isAirbnb = await consoleInput(stdinReader);
 
   console.log('Would you like to use types in your rules? Y/n:');
-  const isTypes = ((await stdinReader.readString('\n')) as string).trim();
-
-  console.log(`Using AIRBNB: ${isAirbnb} Using TYPES: ${isTypes}`);
+  const isTypes = await consoleInput(stdinReader);
 }
 
 /**
@@ -110,13 +112,12 @@ const rulesToAdd = {
  * Output to the console the rules removed and to be added
  * ============================================================================
  */
-const bold = (text: string): string => `\x1b[1m${text}\x1b[0m`;
 
-console.log(`${bold(`${removedRuleNames.length}`)} Rules Removed:
+console.log(`${green(`${removedRuleNames.length}`)} Rules Removed:
 
 ${removedRuleNames.map(ruleName => ruleName).join('\n')}
 
-${bold(`${Object.entries(rulesToAdd).length}`)} Rules Added:
+${green(`${Object.entries(rulesToAdd).length}`)} Rules Added:
 
 ${Object.entries(rulesToAdd)
   .map(ruleName => ruleName[0])
@@ -166,5 +167,5 @@ const eslintrcJson = {
  */
 if (import.meta.main) {
   writeToDisk('.eslintrc.json', JSON.stringify(eslintrcJson, null, 2));
-  console.log(`${bold('.eslintrc.json')} file created`);
+  console.log(`${green('.eslintrc.json')} file created`);
 }

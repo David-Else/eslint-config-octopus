@@ -79,7 +79,7 @@ export function ruleFilter(
   esLintRules: EslintRules,
   conditionToAccept: { (key: string, val: any[]): boolean }
 ): [EslintRules, string[]] {
-  const removedRules = [];
+  const removedRules: string[] = [];
   return [
     Object.fromEntries(
       Object.entries(esLintRules).filter(([key, val]) => {

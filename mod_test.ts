@@ -2,6 +2,7 @@ import { assertEquals } from './deps.ts';
 import { test, runTests } from './deps.ts';
 import { ruleFilter, rulesToRemove } from './mod.ts';
 
+// NOT WORKING wait for next deno release
 test({
   name: 'turned off rules removed',
   fn(): void {

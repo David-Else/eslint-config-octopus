@@ -12,7 +12,7 @@ export function outputToConsole(
 
 ${printList(removedRules)}
   
-${bold(`👍 ${rulesAdded.length}`)} Rules Added:
+👍 ${bold(`${rulesAdded.length}`)} Rules Added:
   
 ${printList(rulesAdded)}
   

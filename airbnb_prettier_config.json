@@ -1,0 +1,7 @@
+{
+  "extends": [
+    "airbnb-typescript/base",
+    "prettier",
+    "prettier/@typescript-eslint"
+  ]
+}

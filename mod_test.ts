@@ -1,6 +1,6 @@
 import { assertEquals } from './deps.ts';
 import { test, runTests } from './deps.ts';
-import { ruleFilter, conditions } from './mod.ts';
+import { ruleFilter, rulesToRemove } from './mod.ts';
 
 test({
   name: 'turned off rules removed',
@@ -10,7 +10,7 @@ test({
       'turned off rule': ['off']
     };
     // Act
-    const filteredRules = ruleFilter(testData, conditions);
+    const filteredRules = ruleFilter(testData, rulesToRemove);
     // Assert
     assertEquals(filteredRules, [{}, ['turned off rule']]);
   }
@@ -24,7 +24,7 @@ test({
       'import/': ['on']
     };
     // Act
-    const filteredRules = ruleFilter(testData, conditions);
+    const filteredRules = ruleFilter(testData, rulesToRemove);
     // Assert
     assertEquals(filteredRules, [{}, ['import/']]);
   }
@@ -41,7 +41,7 @@ test({
       '3': ['on']
     };
     // Act
-    const filteredRules = ruleFilter(testData, conditions);
+    const filteredRules = ruleFilter(testData, rulesToRemove);
     // Assert
     assertEquals(filteredRules, [
       {

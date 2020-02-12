@@ -1,34 +1,31 @@
-# automatic-eslint-rule-generator (work in progress, beta)
+# ESLint Config Octopus 0.1
 
-Automatically create an `.eslintrc.json` file that contains not only the latest configuration and recommend rules for `typescript-eslint` but also the entire set of airbnb base rules modified for typescript with all the rules that conflict with Prettier removed... all optimized with unused/conflicting rules removed.
+Automatically generate your stand-alone dependency free `typescript-eslint` custom  config. All the rules you need are intelligently imported from the most popular configs like airbnb. All clashes with `prettier` are removed.
 
-https://github.com/airbnb/javascript
-https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb-base
+His anti-cruft tentacles grab ESLint rules from different sources and combine them into one dependency free `.eslintrc.json` config file!
 
-This `.eslintrc.json` is then all you need, no need to install any additional dependencies, you can just copy it into each new project. It is completely self contained. If there are any updates to the `eslint-config-airbnb-typescript` and `eslint-config-prettier` packages you can run the script again and regenerate the whole config.
+Due to his distaste for excessive dependencies he only accepts official ESLint rules into his willing mouth. ESLint custom plugins get filtered.
+```
+                        ___
+                     .-'   `'.
+                    /         \
+                    |         ;
+                    |         |           ___.--,
+           _.._     |0) ~ (0) |    _.---'`__.-( (_. airbnb rules
+    __.--'`_.. '.__.\    '--. \_.-' ,.--'`     `""`
+   ( ,.--'`   ',__ /./;   ;, '.__.'`    __
+   _`) )  .---.__.' / |   |\   \__..--""  """--.,_
+  `---' .'.''-._.-'`_./  /\ '.  \ _.-~~~````~~~-._`-.__.'custom rules
+        | |  .' _.-' |  |  \  \  '.               `~---`
+         \ \/ .'     \  \   '. '-._)
+          \/ /        \  \    `=.__`~-.
+          / /\         `) )    / / `"".`\
+    , _.-'.'\ \        / /    ( (     / /
+     `--~`   ) )    .-'.'      '.'.  | (
+            (/`    ( (`          ) )  '-; bloat! spit it out...
+             `      '-;         (-'
+```
 
-Thank to to `eslint-config-airbnb-typescript` and `eslint-config-prettier` that are used in this application!
+Right now he only cares about TypeScript using `typescript-eslint` (sensible creature), but I might pursuade him to munch on plain JavaScript files too. 
 
-Based on idea from the original article here:
-
-https://www.elsewebdevelopment.com/typescript-airbnb-style-guide-optimized-for-prettier-in-one-json-file/
-
-Dependencies : https://deno.land/ deno executable << AMAZING!
-
-## Installation
-
-`git clone https://github.com/David-Else/automatic-eslint-rule-collection-generator`
-
-`cd automatic-eslint-rule-collection-generator`
-
-`npm install`
-
-## To create .eslintrc.json config with config and rules:
-
-`deno --allow-read --allow-write --allow-run mod.ts`
-
-or run tests:
-
-`deno test mod_test.ts --allow-env --allow-write --allow-net --allow-run`
-
-Some prettier conflicting rules are hard coded in `rulesToRemove/basicPrettierConflicts`, to re-generate them from the latest version of `eslint-config-prettier` run `npm run print-prettier-conflicting-rules`. These would need to be manually copied across.
+He only comes to life if `deno` is installed, he is fanatical about using only the best and latest technology.

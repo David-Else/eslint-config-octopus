@@ -1,28 +1,23 @@
 {
-  "name": "extract-rules",
+  "name": "app",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Typescript template with Deno and Rollup bundling support",
+  "main": "src/mod.ts",
   "scripts": {
-    "print-prettier-conflicting-rules": "eslint --print-config app.js | eslint-config-prettier-check",
-    "test": "deno test --importmap=./import_map.json mod_test.ts --allow-env --allow-write --allow-net --allow-run",
-    "run": "deno --importmap=./import_map.json --allow-read --allow-write --allow-run mod.ts"
+    "run-deno-app": "deno -A --importmap=./import_map.json mod.ts",
+    "test": "npm run clear-console && deno test ./ -A --importmap=./import_map.json",
+    "lint": "npm run clear-console && eslint --cache --ext .ts src/",
+    "clear-console": "deno eval \"console.clear()\""
   },
-  "eslintConfig": {
-    "extends": [
-      "airbnb-typescript/base"
-    ]
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "https://www.elsewebdevelopment.com/",
+  "license": "gpl-3.0",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.19.0",
-    "@typescript-eslint/parser": "^2.19.0",
+    "@typescript-eslint/eslint-plugin": "^2.19.2",
+    "@typescript-eslint/parser": "^2.19.2",
     "eslint": "^6.8.0",
-    "eslint-config-airbnb-typescript": "^6.3.1",
+    "eslint-config-airbnb-typescript": "^7.0.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.1",
-    "typescript": "^3.8.1-rc"
+    "typescript": "^3.7.5"
   }
 }

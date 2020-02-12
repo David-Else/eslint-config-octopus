@@ -1,6 +1,5 @@
 node_modules
 pnpm-lock.yaml
-old-code
 .eslintcache
 .eslintrc.json
 .eslintignore

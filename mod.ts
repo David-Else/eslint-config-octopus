@@ -3,14 +3,13 @@
  * @author David Else <david@elsewebdevelopment.com>
  * @copyright 2020 David Else
  * @license gpl-3.0
- * @version 0.8
+ * @version 1.0
  *
  * deno --allow-read --allow-write --allow-run src/mod.ts
  */
 
-import { rules } from './rules.ts';
-import { runCommandReturnResults, writeToDisk } from './utils.ts';
-import { BufReader, green, bold } from './deps.ts';
+import { rulesToAdd } from './rulesToAdd.ts';
+import { outputToConsole } from './view.ts';
 
 interface EslintRules {
   [key: string]: any[];
@@ -18,92 +17,77 @@ interface EslintRules {
 
 /**
  * ============================================================================
- * Read user input
+ * Generate eslint rules based on airbnb with prettier conflicts turned off
  * ============================================================================
  */
-
-// ERROR check in console input!
-async function consoleInput(stdinReader: any): Promise<string> {
-  return ((await stdinReader.readString('\n')) as string).trim();
-}
-
-if (import.meta.main) {
-  const stdinReader = new BufReader(Deno.stdin);
-  console.clear();
-  console.log(`${bold(`Welcome to the eslint rule thingie
-  `)}
-Would you like to use the eslint airbnb rules? Y/n:`);
-
-  const isAirbnb = await consoleInput(stdinReader);
-
-  console.log('Would you like to use types in your rules? Y/n:');
-  const isTypes = await consoleInput(stdinReader);
-
-  // temp nonsense example to refactor into consoleInput()
-  // look here https://deno.land/std/io/bufio_test.ts
-  const options = new Set(['y', 'Y', 'n', 'N', '']);
-  if (!options.has(isAirbnb)) {
-    throw new Error('Please enter valid option');
-  } else {
-    console.log('Sorted!');
-  }
-
-  if (!options.has(isTypes)) {
-    throw new Error('Please enter valid option');
-  } else {
-    console.log('Sorted!');
-  }
-}
-
-/**
- * ============================================================================
- * Create obj that contains all the rules for eslint-config-airbnb-typescript
- *
- * This is done by running eslint on the command line with `--print-config`
- * Eslint looks at package.json for the config that points to
- * `airbnb-typescript/base`, so DON'T change that!
- *
- * The only dependency is the the `import` plugin, but we will strip that out
- * so we only need a single text file with zero dependencies
- * ============================================================================
- */
-
 const path = new URL('./', import.meta.url).pathname;
-const entireEslintConfig = await runCommandReturnResults([
-  'npx',
-  'eslint',
-  '--no-eslintrc',
-  '-c',
-  `${path}/package.json`,
-  '--print-config',
-  'example.js'
-]);
+const eslintConfigFile = 'airbnb_prettier_config.json';
+
+const subprocess = Deno.run({
+  args: [
+    'npx',
+    'eslint',
+    '--no-eslintrc',
+    '-c',
+    `${path}/${eslintConfigFile}`,
+    '--print-config',
+    'example.js'
+  ],
+  stdout: 'piped'
+});
+const commandOutput = await Deno.readAll(subprocess.stdout!);
+const entireEslintConfig = JSON.parse(new TextDecoder().decode(commandOutput));
 
 /**
  * ============================================================================
- * Create the new final list of rules by filering out ones we don't want
+ * Remove rules:
  * ============================================================================
  */
+export const rulesToRemove = (key: string, val: any[]): boolean => {
+  const eslintRecommended = Object.keys({
+    // Checked by Typescript - ts(2378)
+    'getter-return': 'off',
+    // Checked by Typescript - ts(2300)
+    'no-dupe-args': 'off',
+    // Checked by Typescript - ts(1117)
+    'no-dupe-keys': 'off',
+    // Checked by Typescript - ts(7027)
+    'no-unreachable': 'off',
+    // Checked by Typescript - ts(2367)
+    'valid-typeof': 'off',
+    // Checked by Typescript - ts(2588)
+    'no-const-assign': 'off',
+    // Checked by Typescript - ts(2588)
+    'no-new-symbol': 'off',
+    // Checked by Typescript - ts(2376)
+    'no-this-before-super': 'off',
+    // This is checked by Typescript using the option `strictNullChecks`.
+    'no-undef': 'off',
+    // This is already checked by Typescript.
+    'no-dupe-class-members': 'off',
+    // This is already checked by Typescript.
+    'no-redeclare': 'off'
+  });
 
-// use key: keyof typeof and const
-export const conditions = (key: string, val: any[]): boolean =>
-  !!(
-    val[0] !== 'off' && // remove turned off rules
-    !key.startsWith('import/') && // remove rules that use import plugin
-    !rules.remove.basicPrettierConflicts.includes(key) && // remove rules conflicting with prettier
-    !rules.remove.tsEslintRecommendedRules.includes(key) &&
-    !rules.remove.additional.includes(key)
+  const userRulesToRemove = ['no-console'];
+
+  return !!(
+    val[0] !== 'off' && // turned off rules
+    !key.startsWith('import/') && // rules that use import plugin
+    !eslintRecommended.includes(key) &&
+    !userRulesToRemove.includes(key)
   );
+};
 
 export function ruleFilter(
   esLintRules: EslintRules,
-  conditionToAccept: { (key: string, val: any[]): boolean }
+  rulesToRemoveCallback: { (key: string, val: any[]): boolean }
 ): [EslintRules, string[]] {
   const removedRules: string[] = [];
   return [
     Object.fromEntries(
       Object.entries(esLintRules).filter(([key, val]) => {
-        if (conditionToAccept(key, val)) {
+        if (rulesToRemoveCallback(key, val)) {
           return true;
         }
         removedRules.push(key);
@@ -116,74 +100,41 @@ export function ruleFilter(
 
 const [filteredEsLintRules, removedRuleNames] = ruleFilter(
   entireEslintConfig.rules,
-  conditions
+  rulesToRemove
 );
 
-const rulesToAdd = {
-  ...rules.add.v3RecommenedNoTypeInfo,
-  ...rules.add.v3RecommenedTypeInfoNeeded,
-  ...rules.add.personalPreferences
-};
-
 /**
  * ============================================================================
- * Output to the console the rules removed and to be added
+ * Define the new .eslintrc.json including the new rules
  * ============================================================================
  */
-
-console.log(`${green(`${removedRuleNames.length}`)} Rules Removed:
-
-${removedRuleNames.map(ruleName => ruleName).join('\n')}
-
-${green(`${Object.entries(rulesToAdd).length}`)} Rules Added:
-
-${Object.entries(rulesToAdd)
-  .map(ruleName => ruleName[0])
-  .join('\n')}
-`);
-
-/**
- * ============================================================================
- * Build the config files we are going to write to disk
- * * note anything in the `rules` section will overwrite the `extends` section
- * ============================================================================
- */
-const extendsConfigWithTypes = [
-  'eslint:recommended',
-  'plugin:@typescript-eslint/eslint-recommended',
-  'plugin:@typescript-eslint/recommended',
-  'plugin:@typescript-eslint/recommended-requiring-type-checking'
-];
-
-const extendsConfigWithoutTypes = [
-  'eslint:recommended',
-  'plugin:@typescript-eslint/eslint-recommended',
-  'plugin:@typescript-eslint/recommended'
-];
-
-const rulesWithAirBnB = { ...filteredEsLintRules, ...rulesToAdd };
-const rulesWithoutAirBnB = { ...rulesToAdd };
-
 const eslintrcJson = {
   env: {
     browser: true,
-    es6: true
+    es6: true,
+    node: true
   },
-  extends: extendsConfigWithTypes,
+  extends: [
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking'
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: './tsconfig.json'
   },
   plugins: ['@typescript-eslint'],
-  rules: rulesWithAirBnB
+  rules: { ...filteredEsLintRules, ...rulesToAdd }
 };
 
 /**
  * ============================================================================
- * If we are running this file directly on the CLI then write the files
+ * Write to disk and output log to console
  * ============================================================================
  */
-if (import.meta.main) {
-  writeToDisk('.eslintrc.json', JSON.stringify(eslintrcJson, null, 2));
-  console.log(`${green('.eslintrc.json')} file created`);
+async function writeToDisk(fileName: string, data: string): Promise<void> {
+  const encoder = new TextEncoder();
+  await Deno.writeFile(fileName, encoder.encode(data));
 }
+
+await writeToDisk('.eslintrc.json', JSON.stringify(eslintrcJson, null, 2));
+outputToConsole(removedRuleNames, Object.keys(rulesToAdd));

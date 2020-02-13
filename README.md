@@ -27,10 +27,18 @@ Due to his distaste for excessive dependencies he only accepts official ESLint r
              `      '-;         (-'
 `````
 
-Right now he only cares about TypeScript using `typescript-eslint` (sensible creature), but I might pursuade him to munch on plain JavaScript files too.
+Right now he only cares about using `typescript-eslint` for TypeScript linting (sensible creature), but I might pursuade him to munch on plain JavaScript files too.
 
 He only comes to life if `deno` is installed, he is fanatical about using only the best and latest technology.
 
 ## Usage
 
 `deno --allow-read --allow-write --allow-run mod.ts`
+
+## Contribute
+
+If you are using Visual Studio Code install the axetroy deno extension [Visual Studio Code Deno extension](https://marketplace.visualstudio.com/items?itemName=axetroy.vscode-deno) and help out.
+
+Deno is in a state of rapid change until version 1.0, which at the time of writing should be out very soon. I will try to keep up with the breaking API changes as best as possible.
+
+It would be great to integrate React linting, but the main goal is to elimate as many dependencies as possible and export a few files that can be copy/pasted into the users project folder. Deno

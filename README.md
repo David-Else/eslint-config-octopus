@@ -41,4 +41,4 @@ If you are using Visual Studio Code install the axetroy deno extension [Visual S
 
 Deno is in a state of rapid change until version 1.0, which at the time of writing should be out very soon. I will try to keep up with the breaking API changes as best as possible.
 
-It would be great to integrate React linting, but the main goal is to elimate as many dependencies as possible and export a few files that can be copy/pasted into the users project folder. Deno
+It would be great to integrate React linting, but the main goal is to elimate as many dependencies as possible and export a few files that can be copy/pasted into the users project folder.

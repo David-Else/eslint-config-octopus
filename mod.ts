@@ -5,7 +5,7 @@
  * @license gpl-3.0
  * @version 1.0
  *
- * deno --allow-read --allow-write --allow-run src/mod.ts
+ * deno -A mod.ts
  */
 
 import { rulesToAdd } from './rulesToAdd.ts';

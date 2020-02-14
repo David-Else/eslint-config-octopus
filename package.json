@@ -5,7 +5,7 @@
   "main": "src/mod.ts",
   "scripts": {
     "run-deno-app": "deno -A --importmap=./import_map.json mod.ts",
-    "test": "npm run clear-console && deno test ./ -A --importmap=./import_map.json",
+    "test": "npm run clear-console && deno test ./mod_test.ts -A --importmap=./import_map.json",
     "lint": "npm run clear-console && eslint --cache --ext .ts src/",
     "clear-console": "deno eval \"console.clear()\""
   },

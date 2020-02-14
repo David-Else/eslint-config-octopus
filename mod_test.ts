@@ -1,9 +1,7 @@
 import { assertEquals } from './deps.ts';
-import { test, runTests } from './deps.ts';
 import { ruleFilter, rulesToRemove } from './mod.ts';
 
-// NOT WORKING wait for next deno release
-test({
+Deno.test({
   name: 'turned off rules removed',
   fn(): void {
     // Arrange
@@ -17,7 +15,7 @@ test({
   }
 });
 
-test({
+Deno.test({
   name: 'import plugin rules removed',
   fn(): void {
     // Arrange
@@ -31,7 +29,7 @@ test({
   }
 });
 
-test({
+Deno.test({
   name: 'various rules removed',
   fn(): void {
     // Arrange
@@ -53,5 +51,3 @@ test({
     ]);
   }
 });
-
-runTests();

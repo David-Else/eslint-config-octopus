@@ -8,8 +8,8 @@
  * deno -A mod.ts
  */
 
-import { rulesToAdd } from './rulesToAdd.ts';
-import { outputToConsole } from './view.ts';
+import { rulesToAdd } from "./rulesToAdd.ts";
+import { outputToConsole } from "./view.ts";
 
 interface EslintRules {
   [key: string]: any[];
@@ -20,20 +20,20 @@ interface EslintRules {
  * Generate eslint rules based on airbnb with prettier conflicts turned off
  * ============================================================================
  */
-const path = new URL('./', import.meta.url).pathname;
-const eslintConfigFile = 'airbnb_prettier_config.json';
+const path = new URL("./", import.meta.url).pathname;
+const eslintConfigFile = "airbnb_prettier_config.json";
 
 const subprocess = Deno.run({
   args: [
-    'npx',
-    'eslint',
-    '--no-eslintrc',
-    '-c',
+    "npx",
+    "eslint",
+    "--no-eslintrc",
+    "-c",
     `${path}/${eslintConfigFile}`,
-    '--print-config',
-    'example.js'
+    "--print-config",
+    "example.js"
   ],
-  stdout: 'piped'
+  stdout: "piped"
 });
 const commandOutput = await Deno.readAll(subprocess.stdout!);
 const entireEslintConfig = JSON.parse(new TextDecoder().decode(commandOutput));
@@ -46,34 +46,34 @@ const entireEslintConfig = JSON.parse(new TextDecoder().decode(commandOutput));
 export const rulesToRemove = (key: string, val: any[]): boolean => {
   const eslintRecommended = Object.keys({
     // Checked by Typescript - ts(2378)
-    'getter-return': 'off',
+    "getter-return": "off",
     // Checked by Typescript - ts(2300)
-    'no-dupe-args': 'off',
+    "no-dupe-args": "off",
     // Checked by Typescript - ts(1117)
-    'no-dupe-keys': 'off',
+    "no-dupe-keys": "off",
     // Checked by Typescript - ts(7027)
-    'no-unreachable': 'off',
+    "no-unreachable": "off",
     // Checked by Typescript - ts(2367)
-    'valid-typeof': 'off',
+    "valid-typeof": "off",
     // Checked by Typescript - ts(2588)
-    'no-const-assign': 'off',
+    "no-const-assign": "off",
     // Checked by Typescript - ts(2588)
-    'no-new-symbol': 'off',
+    "no-new-symbol": "off",
     // Checked by Typescript - ts(2376)
-    'no-this-before-super': 'off',
+    "no-this-before-super": "off",
     // This is checked by Typescript using the option `strictNullChecks`.
-    'no-undef': 'off',
+    "no-undef": "off",
     // This is already checked by Typescript.
-    'no-dupe-class-members': 'off',
+    "no-dupe-class-members": "off",
     // This is already checked by Typescript.
-    'no-redeclare': 'off'
+    "no-redeclare": "off"
   });
 
-  const userRulesToRemove = ['no-console'];
+  const userRulesToRemove = ["no-console", "lines-between-class-members"];
 
   return !!(
-    val[0] !== 'off' && // turned off rules
-    !key.startsWith('import/') && // rules that use import plugin
+    val[0] !== "off" && // turned off rules
+    !key.startsWith("import/") && // rules that use import plugin
     !eslintRecommended.includes(key) &&
     !userRulesToRemove.includes(key)
   );
@@ -115,14 +115,14 @@ const eslintrcJson = {
     node: true
   },
   extends: [
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking'
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
-  parser: '@typescript-eslint/parser',
+  parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: './tsconfig.json'
+    project: "./tsconfig.json"
   },
-  plugins: ['@typescript-eslint'],
+  plugins: ["@typescript-eslint"],
   rules: { ...filteredEsLintRules, ...rulesToAdd }
 };
 
@@ -136,5 +136,5 @@ async function writeToDisk(fileName: string, data: string): Promise<void> {
   await Deno.writeFile(fileName, encoder.encode(data));
 }
 
-await writeToDisk('.eslintrc.json', JSON.stringify(eslintrcJson, null, 2));
+await writeToDisk(".eslintrc.json", JSON.stringify(eslintrcJson, null, 2));
 outputToConsole(removedRuleNames, Object.keys(rulesToAdd));

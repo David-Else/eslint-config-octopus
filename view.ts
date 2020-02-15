@@ -1,11 +1,11 @@
-import { green, bold } from './deps.ts';
+import { green, bold } from "./deps.ts";
 
 export function outputToConsole(
   removedRules: string[],
   rulesAdded: string[]
 ): void {
   const printList = (list: string[]): string =>
-    list.map(listItem => listItem).join('\n');
+    list.map(listItem => listItem).join("\n");
 
   console.log(`
 ⛔ ${bold(`${removedRules.length}`)} Rules Removed:

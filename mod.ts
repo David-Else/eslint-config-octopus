@@ -40,44 +40,59 @@ const entireEslintConfig = JSON.parse(new TextDecoder().decode(commandOutput));
 
 /**
  * ============================================================================
- * Remove rules:
+ * Remove rules
  * ============================================================================
  */
-export const rulesToRemove = (key: string, val: any[]): boolean => {
-  const eslintRecommended = Object.keys({
-    // Checked by Typescript - ts(2378)
-    "getter-return": "off",
-    // Checked by Typescript - ts(2300)
-    "no-dupe-args": "off",
-    // Checked by Typescript - ts(1117)
-    "no-dupe-keys": "off",
-    // Checked by Typescript - ts(7027)
-    "no-unreachable": "off",
-    // Checked by Typescript - ts(2367)
-    "valid-typeof": "off",
-    // Checked by Typescript - ts(2588)
-    "no-const-assign": "off",
-    // Checked by Typescript - ts(2588)
-    "no-new-symbol": "off",
-    // Checked by Typescript - ts(2376)
-    "no-this-before-super": "off",
-    // This is checked by Typescript using the option `strictNullChecks`.
-    "no-undef": "off",
-    // This is already checked by Typescript.
-    "no-dupe-class-members": "off",
-    // This is already checked by Typescript.
-    "no-redeclare": "off"
-  });
 
-  const userRulesToRemove = ["no-console", "lines-between-class-members"];
+/**
+ * These rules are meant to be removed by:
+ *
+ * ```
+ * "extends": [ "plugin:@typescript-eslint/recommended" ]
+ * ```
+ * and are designed to be used after extending a config that turns them on
+ * Our new config will have precidence so we need them removed from `"rules": {}`
+ */
+const checkedByTypeScript: readonly string[] = [
+  "getter-return", // ts(2378)
+  "no-dupe-args", // ts(2300)
+  "no-dupe-keys", // ts(1117)
+  "no-unreachable", // ts(7027)
+  "valid-typeof", // ts(2367)
+  "no-const-assign", // ts(2588)
+  "no-new-symbol", // ts(2588)
+  "no-this-before-super", // ts(2376)
+  "no-undef", // This is checked by Typescript using the option `strictNullChecks`.
+  "no-dupe-class-members",
+  "no-redeclare"
+];
 
+const userRulesToRemove: readonly string[] = [
+  "no-console",
+  "lines-between-class-members"
+];
+
+type rulesToRemove = typeof checkedByTypeScript[number] &
+  typeof userRulesToRemove[number];
+
+export function rulesToRemove(key: string, val: any[]): boolean {
   return !!(
     val[0] !== "off" && // turned off rules
     !key.startsWith("import/") && // rules that use import plugin
-    !eslintRecommended.includes(key) &&
+    !checkedByTypeScript.includes(key) &&
     !userRulesToRemove.includes(key)
   );
-};
+}
+
+// TYPE ERROR props is undefined, but it is not...
+// export function ruleModifier(key: string, val: any[]): [string, any[]] {
+//   if (key === "no-param-reassign" || val[1].props === "true") {
+//     val[1].props = "false";
+//     throw new Error();
+//     return [key, val];
+//   }
+//   return [key, val];
+// }
 
 export function ruleFilter(
   esLintRules: EslintRules,
@@ -87,7 +102,9 @@ export function ruleFilter(
   return [
     Object.fromEntries(
       Object.entries(esLintRules).filter(([key, val]) => {
+        // if the rule is to be included check if it should be modified
         if (rulesToRemoveCallback(key, val)) {
+          // [key, val] = ruleModifier(key, val);
           return true;
         }
         removedRules.push(key);

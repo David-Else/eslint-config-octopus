@@ -27,4 +27,4 @@ export const rulesToAdd = {
     }
   ],
   "max-params": ["error", 3]
-};
+} as const;

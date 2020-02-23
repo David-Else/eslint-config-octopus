@@ -15,6 +15,10 @@ interface EslintRules {
   [key: string]: any[];
 }
 
+interface EslintConfig {
+  rules: EslintRules;
+}
+
 /**
  * ============================================================================
  * Generate eslint rules based on airbnb with prettier conflicts turned off
@@ -36,7 +40,9 @@ const subprocess = Deno.run({
   stdout: "piped"
 });
 const commandOutput = await Deno.readAll(subprocess.stdout!);
-const entireEslintConfig = JSON.parse(new TextDecoder().decode(commandOutput));
+const entireEslintConfig: EslintConfig = JSON.parse(
+  new TextDecoder().decode(commandOutput)
+);
 
 /**
  * ============================================================================
@@ -78,6 +84,7 @@ type rulesToRemove = typeof checkedByTypeScript[number] &
 export function rulesToRemove(key: string, val: any[]): boolean {
   return !!(
     val[0] !== "off" && // turned off rules
+    val[0] !== 0 && // turned off rules
     !key.startsWith("import/") && // rules that use import plugin
     !checkedByTypeScript.includes(key) &&
     !userRulesToRemove.includes(key)

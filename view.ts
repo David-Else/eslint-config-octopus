@@ -8,11 +8,11 @@ export function outputToConsole(
     list.map(listItem => listItem).join("\n");
 
   console.log(`
-⛔ ${bold(`${removedRules.length}`)} Rules Removed:
+⛔${bold(`  ${removedRules.length}`)} Rules Removed:
 
 ${printList(removedRules)}
   
-👍 ${bold(`${rulesAdded.length}`)} Rules Added:
+👍${bold(`  ${rulesAdded.length}`)} Rules Added:
   
 ${printList(rulesAdded)}
   

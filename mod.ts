@@ -10,7 +10,7 @@
 
 import { rulesToAdd } from "./rulesToAdd.ts";
 import { outputToConsole } from "./view.ts";
-
+import { assert } from "./deps.ts";
 interface EslintRules {
   [key: string]: any[];
 }
@@ -39,7 +39,8 @@ const subprocess = Deno.run({
   ],
   stdout: "piped"
 });
-const commandOutput = await Deno.readAll(subprocess.stdout!);
+assert(subprocess.stdout);
+const commandOutput = await Deno.readAll(subprocess.stdout);
 const entireEslintConfig: EslintConfig = JSON.parse(
   new TextDecoder().decode(commandOutput)
 );

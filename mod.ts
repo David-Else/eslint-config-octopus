@@ -28,16 +28,16 @@ const path = new URL("./", import.meta.url).pathname;
 const eslintConfigFile = "airbnb_prettier_config.json";
 
 const subprocess = Deno.run({
-  args: [
+  cmd: [
     "npx",
     "eslint",
     "--no-eslintrc",
     "-c",
     `${path}/${eslintConfigFile}`,
     "--print-config",
-    "example.js"
+    "example.js",
   ],
-  stdout: "piped"
+  stdout: "piped",
 });
 assert(subprocess.stdout);
 const commandOutput = await Deno.readAll(subprocess.stdout);
@@ -71,12 +71,12 @@ const checkedByTypeScript: readonly string[] = [
   "no-this-before-super", // ts(2376)
   "no-undef", // This is checked by Typescript using the option `strictNullChecks`.
   "no-dupe-class-members",
-  "no-redeclare"
+  "no-redeclare",
 ];
 
 const userRulesToRemove: readonly string[] = [
   "no-console",
-  "lines-between-class-members"
+  "lines-between-class-members",
 ];
 
 type rulesToRemove = typeof checkedByTypeScript[number] &
@@ -119,7 +119,7 @@ export function ruleFilter(
         return false;
       })
     ),
-    removedRules
+    removedRules,
   ];
 }
 
@@ -137,18 +137,18 @@ const eslintrcJson = {
   env: {
     browser: true,
     es6: true,
-    node: true
+    node: true,
   },
   extends: [
     "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: "./tsconfig.json"
+    project: "./tsconfig.json",
   },
   plugins: ["@typescript-eslint"],
-  rules: { ...filteredEsLintRules, ...rulesToAdd }
+  rules: { ...filteredEsLintRules, ...rulesToAdd },
 };
 
 /**

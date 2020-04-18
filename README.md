@@ -1,5 +1,7 @@
 # ESLint Config Octopus 0.1
 
+[![deno doc](https://doc.deno.land/badge.svg)](https://raw.githubusercontent.com/David-Else/eslint-config-octopus/master/mod.ts)
+
 Automatically generate your stand-alone dependency free `typescript-eslint` custom config. All the rules you need are intelligently imported from the most popular configs like airbnb. All clashes with `prettier` are removed.
 
 His anti-cruft tentacles grab ESLint rules from different sources and combine them into one dependency free `.eslintrc.json` config file!

@@ -99,12 +99,10 @@ export function rulesToRemove(key: string, val: any[]): boolean {
 }
 
 /**
- * ============================================================================
  * Filters a set of ESLint rules and returns an array with the new list and the removed rules
  *
  * @param esLintRules
  * @param rulesToRemoveCallback
- * ============================================================================
  */
 export function ruleFilter(
   esLintRules: EslintRules,
@@ -133,9 +131,7 @@ const [filteredEsLintRules, removedRuleNames] = ruleFilter(
 );
 
 /**
- * ============================================================================
  * Define the new .eslintrc.json including the new rules
- * ============================================================================
  */
 const eslintrcJson = {
   env: {
@@ -156,9 +152,7 @@ const eslintrcJson = {
 };
 
 /**
- * ============================================================================
  * Write to disk and output log to console
- * ============================================================================
  */
 export async function writeToDisk(
   fileName: string,

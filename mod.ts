@@ -4,18 +4,18 @@
  * @copyright 2020 David Else
  * @license gpl-3.0
  * @version 1.0
- *
+ * tested with deno 0.39.0
  * deno -A mod.ts
  */
 
 import { rulesToAdd } from "./rulesToAdd.ts";
 import { outputToConsole } from "./view.ts";
 import { assert } from "./deps.ts";
-interface EslintRules {
+export interface EslintRules {
   [key: string]: any[];
 }
 
-interface EslintConfig {
+export interface EslintConfig {
   rules: EslintRules;
 }
 
@@ -79,9 +79,15 @@ const userRulesToRemove: readonly string[] = [
   "lines-between-class-members",
 ];
 
-type rulesToRemove = typeof checkedByTypeScript[number] &
+export type rulesToRemove = typeof checkedByTypeScript[number] &
   typeof userRulesToRemove[number];
 
+/**
+ * Returns a value of (true?) if the rule is to be included
+ *
+ * @param key Current key name of rule being checked
+ * @param val Current value of rule being checked
+ */
 export function rulesToRemove(key: string, val: any[]): boolean {
   return !!(
     val[0] !== "off" && // turned off rules
@@ -92,16 +98,12 @@ export function rulesToRemove(key: string, val: any[]): boolean {
   );
 }
 
-// TYPE ERROR props is undefined, but it is not...
-// export function ruleModifier(key: string, val: any[]): [string, any[]] {
-//   if (key === "no-param-reassign" || val[1].props === "true") {
-//     val[1].props = "false";
-//     throw new Error();
-//     return [key, val];
-//   }
-//   return [key, val];
-// }
-
+/**
+ * Filters a set of ESLint rules and returns an array with the new list and the removed rules
+ *
+ * @param esLintRules
+ * @param rulesToRemoveCallback
+ */
 export function ruleFilter(
   esLintRules: EslintRules,
   rulesToRemoveCallback: { (key: string, val: any[]): boolean }
@@ -156,7 +158,10 @@ const eslintrcJson = {
  * Write to disk and output log to console
  * ============================================================================
  */
-async function writeToDisk(fileName: string, data: string): Promise<void> {
+export async function writeToDisk(
+  fileName: string,
+  data: string
+): Promise<void> {
   const encoder = new TextEncoder();
   await Deno.writeFile(fileName, encoder.encode(data));
 }

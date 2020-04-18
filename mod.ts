@@ -99,10 +99,12 @@ export function rulesToRemove(key: string, val: any[]): boolean {
 }
 
 /**
+ * ============================================================================
  * Filters a set of ESLint rules and returns an array with the new list and the removed rules
  *
  * @param esLintRules
  * @param rulesToRemoveCallback
+ * ============================================================================
  */
 export function ruleFilter(
   esLintRules: EslintRules,

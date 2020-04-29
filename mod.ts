@@ -25,11 +25,13 @@ export interface EslintConfig {
  * ============================================================================
  */
 
-// When you get <some file URL object>.pathname on Windows, you'll get an
-// extraneous leading slash: /C:/path/to/file. You just need to strip that
-function fullPath(fileName: string): string {
-  const fullPathToFile = new URL(fileName, import.meta.url).pathname;
-  return Deno.build.os === "win" ? fullPathToFile.slice(1) : fullPathToFile;
+/**
+ * Takes the name of a file and prepends the full path of the module.
+ * If Windows detected then the extraneous leading `/` is stripped out.
+ */
+function prependFullPath(fileName: string): string {
+  const fileWithFullPath = new URL(fileName, import.meta.url).pathname;
+  return Deno.build.os === "win" ? fileWithFullPath.slice(1) : fileWithFullPath;
 }
 
 const subprocess = Deno.run({
@@ -38,7 +40,7 @@ const subprocess = Deno.run({
     "eslint",
     "--no-eslintrc",
     "-c",
-    fullPath("airbnb_prettier_config.json"),
+    prependFullPath("airbnb_prettier_config.json"),
     "--print-config",
     "example.js",
   ],

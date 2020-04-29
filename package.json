@@ -4,19 +4,19 @@
   "description": "Typescript template with Deno and Rollup bundling support",
   "main": "src/mod.ts",
   "scripts": {
-    "run-deno-app": "deno -A --importmap=./import_map.json mod.ts",
-    "test": "npm run clear-console && deno test ./mod_test.ts -A --importmap=./import_map.json",
+    "run-deno-app": "deno -A mod.ts",
+    "test": "npm run clear-console && deno test ./mod_test.ts -A",
     "lint": "npm run clear-console && eslint --cache --ext .ts ./",
     "clear-console": "deno eval \"console.clear()\""
   },
   "author": "https://www.elsewebdevelopment.com/",
   "license": "gpl-3.0",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.28.0",
-    "@typescript-eslint/parser": "^2.28.0",
+    "@typescript-eslint/eslint-plugin": "^2.30.0",
+    "@typescript-eslint/parser": "^2.30.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-typescript": "^7.2.1",
-    "eslint-config-prettier": "^6.10.1",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.20.2",
     "typescript": "^3.8.3"
   }

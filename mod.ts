@@ -11,6 +11,7 @@
 import { rulesToAdd } from "./rulesToAdd.ts";
 import { outputToConsole } from "./view.ts";
 import { assert } from "./deps.ts";
+
 export interface EslintRules {
   [key: string]: any[];
 }
@@ -25,12 +26,14 @@ export interface EslintConfig {
  * ============================================================================
  */
 
+// https://github.com/denoland/deno/pull/4993 fixes this
 /**
  * Takes the name of a file and prepends the full path of the module.
- * If Windows detected then the extraneous leading `/` is stripped out.
  */
 function prependFullPath(fileName: string): string {
   const fileWithFullPath = new URL(fileName, import.meta.url).pathname;
+
+  // if Windows detected then the extraneous leading `/` is stripped out.
   return Deno.build.os === "win" ? fileWithFullPath.slice(1) : fileWithFullPath;
 }
 

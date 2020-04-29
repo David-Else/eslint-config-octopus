@@ -27,11 +27,9 @@ export interface EslintConfig {
 
 // When you get <some file URL object>.pathname on Windows, you'll get an
 // extraneous leading slash: /C:/path/to/file. You just need to strip that
-let eslintConfigPath = new URL("airbnb_prettier_config.json", import.meta.url)
-  .pathname;
-
-if (Deno.build.os === "win") {
-  eslintConfigPath = eslintConfigPath.slice(1);
+function fullPath(fileName: string): string {
+  const fullPathToFile = new URL(fileName, import.meta.url).pathname;
+  return Deno.build.os === "win" ? fullPathToFile.slice(1) : fullPathToFile;
 }
 
 const subprocess = Deno.run({
@@ -40,7 +38,7 @@ const subprocess = Deno.run({
     "eslint",
     "--no-eslintrc",
     "-c",
-    eslintConfigPath,
+    fullPath("airbnb_prettier_config.json"),
     "--print-config",
     "example.js",
   ],

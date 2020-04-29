@@ -4,7 +4,7 @@
  * @copyright 2020 David Else
  * @license gpl-3.0
  * @version 1.0
- * tested with deno 0.39.0
+ * tested with deno 0.41.0
  * deno -A mod.ts
  */
 
@@ -24,8 +24,15 @@ export interface EslintConfig {
  * Generate eslint rules based on airbnb with prettier conflicts turned off
  * ============================================================================
  */
-const path = new URL("./", import.meta.url).pathname;
-const eslintConfigFile = "airbnb_prettier_config.json";
+
+// When you get <some file URL object>.pathname on Windows, you'll get an
+// extraneous leading slash: /C:/path/to/file. You just need to strip that
+let eslintConfigPath = new URL("airbnb_prettier_config.json", import.meta.url)
+  .pathname;
+
+if (Deno.build.os === "win") {
+  eslintConfigPath = eslintConfigPath.slice(1);
+}
 
 const subprocess = Deno.run({
   cmd: [
@@ -33,12 +40,13 @@ const subprocess = Deno.run({
     "eslint",
     "--no-eslintrc",
     "-c",
-    `${path}/${eslintConfigFile}`,
+    eslintConfigPath,
     "--print-config",
     "example.js",
   ],
   stdout: "piped",
 });
+
 assert(subprocess.stdout);
 const commandOutput = await Deno.readAll(subprocess.stdout);
 const entireEslintConfig: EslintConfig = JSON.parse(

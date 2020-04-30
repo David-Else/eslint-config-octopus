@@ -4,13 +4,13 @@
  * @copyright 2020 David Else
  * @license gpl-3.0
  * @version 1.0
- * tested with deno 0.41.0
+ * tested with deno 0.42.0
  * deno -A mod.ts
  */
 
+import { assert, fromFileUrl } from "./deps.ts";
 import { rulesToAdd } from "./rulesToAdd.ts";
 import { outputToConsole } from "./view.ts";
-import { assert } from "./deps.ts";
 
 export interface EslintRules {
   [key: string]: any[];
@@ -26,24 +26,13 @@ export interface EslintConfig {
  * ============================================================================
  */
 
-// https://github.com/denoland/deno/pull/4993 fixes this
-/**
- * Takes the name of a file and prepends the full path of the module.
- */
-function prependFullPath(fileName: string): string {
-  const fileWithFullPath = new URL(fileName, import.meta.url).pathname;
-
-  // if Windows detected then the extraneous leading `/` is stripped out.
-  return Deno.build.os === "win" ? fileWithFullPath.slice(1) : fileWithFullPath;
-}
-
 const subprocess = Deno.run({
   cmd: [
     "npx",
     "eslint",
     "--no-eslintrc",
     "-c",
-    prependFullPath("airbnb_prettier_config.json"),
+    fromFileUrl(new URL("airbnb_prettier_config.json", import.meta.url)),
     "--print-config",
     "example.js",
   ],

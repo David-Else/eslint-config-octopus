@@ -4,7 +4,7 @@
  * @copyright 2020 David Else
  * @license gpl-3.0
  * @version 1.0
- * tested with deno 0.42.0
+ * tested with deno 1.0.0-rc1
  * deno -A mod.ts
  */
 

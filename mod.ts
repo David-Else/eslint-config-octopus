@@ -8,7 +8,7 @@
  */
 
 import { assert, fromFileUrl, writeJsonSync } from "./deps.ts";
-import { rulesToAdd } from "./rulesToAdd.ts";
+import { rulesToAdd, checkedByTypeScript, userRulesToRemove } from "./rules.ts";
 import { outputToConsole } from "./view.ts";
 
 export interface EslintRules {
@@ -21,7 +21,7 @@ export interface EslintConfig {
 
 /**
  * ============================================================================
- * Generate eslint rules based on airbnb with prettier conflicts turned off
+ * Create rules based on airbnb-typescript/base, prettier conflicts turned off
  * ============================================================================
  */
 const subprocess = Deno.run({
@@ -44,44 +44,7 @@ const entireEslintConfig: EslintConfig = JSON.parse(
 );
 
 /**
- * ============================================================================
- * Remove rules
- * ============================================================================
- */
-
-/**
- * These rules are meant to be removed by:
- *
- * ```
- * "extends": [ "plugin:@typescript-eslint/recommended" ]
- * ```
- * and are designed to be used after extending a config that turns them on
- * Our new config will have precidence so we need them removed from `"rules": {}`
- */
-const checkedByTypeScript: readonly string[] = [
-  "getter-return", // ts(2378)
-  "no-dupe-args", // ts(2300)
-  "no-dupe-keys", // ts(1117)
-  "no-unreachable", // ts(7027)
-  "valid-typeof", // ts(2367)
-  "no-const-assign", // ts(2588)
-  "no-new-symbol", // ts(2588)
-  "no-this-before-super", // ts(2376)
-  "no-undef", // This is checked by Typescript using the option `strictNullChecks`.
-  "no-dupe-class-members",
-  "no-redeclare",
-];
-
-const userRulesToRemove: readonly string[] = [
-  "no-console",
-  "lines-between-class-members",
-];
-
-export type rulesToRemove = typeof checkedByTypeScript[number] &
-  typeof userRulesToRemove[number];
-
-/**
- * Returns a value of (true?) if the rule is to be included
+ * Calculate rules to remove
  *
  * @param key Current key name of rule being checked
  * @param val Current value of rule being checked

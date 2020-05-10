@@ -4,11 +4,11 @@
  * @copyright 2020 David Else
  * @license gpl-3.0
  * @version 1.0
- * tested with deno 1.0.0-rc1
+ * tested with deno 1.0.0-rc2
  * deno -A mod.ts
  */
 
-import { assert, fromFileUrl } from "./deps.ts";
+import { assert, fromFileUrl, writeJsonSync } from "./deps.ts";
 import { rulesToAdd } from "./rulesToAdd.ts";
 import { outputToConsole } from "./view.ts";
 
@@ -154,13 +154,5 @@ const eslintrcJson = {
 /**
  * Write to disk and output log to console
  */
-export async function writeToDisk(
-  fileName: string,
-  data: string
-): Promise<void> {
-  const encoder = new TextEncoder();
-  await Deno.writeFile(fileName, encoder.encode(data));
-}
-
-await writeToDisk(".eslintrc.json", JSON.stringify(eslintrcJson, null, 2));
+writeJsonSync(".eslintrc.json", eslintrcJson, { spaces: 2 });
 outputToConsole(removedRuleNames, Object.keys(rulesToAdd));

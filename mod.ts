@@ -5,7 +5,6 @@
  * @license gpl-3.0
  * @version 1.0
  * tested with deno 1.0.0-rc2
- * deno -A mod.ts
  */
 
 import { assert, fromFileUrl, writeJsonSync } from "./deps.ts";
@@ -25,7 +24,6 @@ export interface EslintConfig {
  * Generate eslint rules based on airbnb with prettier conflicts turned off
  * ============================================================================
  */
-
 const subprocess = Deno.run({
   cmd: [
     "npx",
@@ -152,7 +150,9 @@ const eslintrcJson = {
 };
 
 /**
- * Write to disk and output log to console
+ * Write to disk and output log to console if run directly
  */
-writeJsonSync(".eslintrc.json", eslintrcJson, { spaces: 2 });
-outputToConsole(removedRuleNames, Object.keys(rulesToAdd));
+if (import.meta.main) {
+  writeJsonSync(".eslintrc.json", eslintrcJson, { spaces: 2 });
+  outputToConsole(removedRuleNames, Object.keys(rulesToAdd));
+}

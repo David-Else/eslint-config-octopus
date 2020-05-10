@@ -1,16 +1,15 @@
-# ESLint Config Octopus 0.1
+# ESLint Config Octopus 0.9
 
 [![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/raw.githubusercontent.com/David-Else/eslint-config-octopus/master/mod.ts)
 
-https://doc.deno.land/https/deno.land/std/http/mod.ts
+Automatically create your own custom `.eslintrc.json` config file containing rules taken from `eslint-config-airbnb-typescript` with the following modifications:
 
-https://raw.githubusercontent.com/David-Else/eslint-config-octopus/master/mod.ts
-
-Automatically generate your stand-alone dependency free `typescript-eslint` custom config. All the rules you need are intelligently imported from the most popular configs like airbnb. All clashes with `prettier` are removed.
-
-His anti-cruft tentacles grab ESLint rules from different sources and combine them into one dependency free `.eslintrc.json` config file!
-
-Due to his distaste for excessive dependencies he only accepts official ESLint rules into his willing mouth. ESLint custom plugins get filtered.
+- All turned `off` rules removed as they are not needed as overides
+- All references to the `import` plugin used by the airbnb rules removed to allow the creation of one dependency free config file
+- All conflicts with Prettier removed using `eslint-config-prettier`
+- All rules removed that are superceeded by the TypeScript compiler used as supplied by `typescript-eslint/recommended`
+- Addition rules supplied by the user removed
+- Custom list of user rules added
 
 `````
                         ___
@@ -39,12 +38,4 @@ He only comes to life if `deno` is installed, he is fanatical about using only t
 
 ## Usage
 
-`deno --allow-read --allow-write --allow-run mod.ts`
-
-## Contribute
-
-If you are using Visual Studio Code install the axetroy deno extension [Visual Studio Code Deno extension](https://marketplace.visualstudio.com/items?itemName=axetroy.vscode-deno) and help out.
-
-Deno is in a state of rapid change until version 1.0, which at the time of writing should be out very soon. I will try to keep up with the breaking API changes as best as possible.
-
-It would be great to integrate React linting, but the main goal is to elimate as many dependencies as possible and export a few files that can be copy/pasted into the users project folder.
+`deno run --allow-read --allow-write --allow-run mod.ts`

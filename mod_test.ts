@@ -6,13 +6,13 @@ Deno.test({
   fn(): void {
     // Arrange
     const testData = {
-      "turned off rule": ["off"]
+      "turned off rule": ["off"],
     };
     // Act
     const filteredRules = ruleFilter(testData, rulesToRemove);
     // Assert
     assertEquals(filteredRules, [{}, ["turned off rule"]]);
-  }
+  },
 });
 
 Deno.test({
@@ -20,13 +20,13 @@ Deno.test({
   fn(): void {
     // Arrange
     const testData = {
-      "import/": ["on"]
+      "import/": ["on"],
     };
     // Act
     const filteredRules = ruleFilter(testData, rulesToRemove);
     // Assert
     assertEquals(filteredRules, [{}, ["import/"]]);
-  }
+  },
 });
 
 Deno.test({
@@ -37,7 +37,7 @@ Deno.test({
       "1": ["on"],
       "import/": ["on"],
       "2": ["off"],
-      "3": ["on"]
+      "3": ["on"],
     };
     // Act
     const filteredRules = ruleFilter(testData, rulesToRemove);
@@ -45,9 +45,9 @@ Deno.test({
     assertEquals(filteredRules, [
       {
         "1": ["on"],
-        "3": ["on"]
+        "3": ["on"],
       },
-      ["2", "import/"]
+      ["2", "import/"],
     ]);
-  }
+  },
 });

@@ -4,8 +4,8 @@
   "description": "Typescript template with Deno and Rollup bundling support",
   "main": "src/mod.ts",
   "scripts": {
-    "run-deno-app": "deno run -A mod.ts",
-    "test": "npm run clear-console && deno test ./mod_test.ts -A",
+    "run-deno-app": "deno run --allow-run --allow-write mod.ts",
+    "test": "npm run clear-console && deno test --allow-run ./mod_test.ts",
     "lint": "npm run clear-console && eslint --cache --ext .ts ./",
     "clear-console": "deno eval \"console.clear()\""
   },

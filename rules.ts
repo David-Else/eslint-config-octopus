@@ -55,6 +55,7 @@ export const checkedByTypeScript: readonly string[] = [
 export const userRulesToRemove: readonly string[] = [
   "no-console",
   "lines-between-class-members",
+  "@typescript-eslint/camelcase", // temp until airbnb update for eslint 7
 ];
 
 export type rulesToRemove = typeof checkedByTypeScript[number] &

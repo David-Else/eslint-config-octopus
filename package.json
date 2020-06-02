@@ -5,19 +5,19 @@
   "main": "src/mod.ts",
   "scripts": {
     "run-deno-app": "deno run -A mod.ts",
-    "test": "npm run clear-console && deno test ./mod_test.ts -A",
+    "test": "npm run clear-console && deno test -A ./mod_test.ts",
     "lint": "npm run clear-console && eslint --cache --ext .ts ./",
     "clear-console": "deno eval \"console.clear()\""
   },
   "author": "https://www.elsewebdevelopment.com/",
   "license": "gpl-3.0",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^3.0.0-alpha.27",
-    "@typescript-eslint/parser": "^2.34.0",
-    "eslint": "^7.0.0",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
+    "eslint": "^7.1.0",
     "eslint-config-airbnb-typescript": "^7.2.1",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.20.2",
-    "typescript": "^3.9.2"
+    "typescript": "^3.9.3"
   }
 }

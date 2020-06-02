@@ -1,7 +1,9 @@
-export { green, bold } from "https://deno.land/std@v0.50.0/fmt/colors.ts";
-export { fromFileUrl } from "https://deno.land/std@v0.50.0/path/mod.ts";
-export { writeJsonSync } from "https://deno.land/std@v0.50.0/fs/write_json.ts";
+// to update use `udd deps.ts --test="deno test --allow-run ./mod_test.ts"`
+
+export { green, bold } from "https://deno.land/std@v0.54.0/fmt/colors.ts";
+export { fromFileUrl } from "https://deno.land/std@v0.54.0/path/mod.ts";
+export { writeJsonSync } from "https://deno.land/std@v0.54.0/fs/write_json.ts";
 export {
   assert,
   assertEquals,
-} from "https://deno.land/std@v0.50.0/testing/asserts.ts";
+} from "https://deno.land/std@v0.54.0/testing/asserts.ts";

@@ -1,8 +1,8 @@
 export const rulesToAdd = {
-  "@typescript-eslint/no-floating-promises": "error",
-  "@typescript-eslint/restrict-plus-operands": "error",
-  "@typescript-eslint/no-extra-non-null-assertion": "error",
-  "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
+  "@typescript-eslint/no-floating-promises": "error", // in new
+  "@typescript-eslint/restrict-plus-operands": "error", // in new
+  "@typescript-eslint/no-extra-non-null-assertion": "error", // in new
+  "@typescript-eslint/no-non-null-asserted-optional-chain": "error", // in new
   "@typescript-eslint/explicit-function-return-type": "error",
   "@typescript-eslint/no-parameter-properties": "off",
   "@typescript-eslint/member-ordering": "error",
@@ -55,7 +55,6 @@ export const checkedByTypeScript: readonly string[] = [
 export const userRulesToRemove: readonly string[] = [
   "no-console",
   "lines-between-class-members",
-  "@typescript-eslint/camelcase", // temp until airbnb update for eslint 7
 ];
 
 export type rulesToRemove = typeof checkedByTypeScript[number] &

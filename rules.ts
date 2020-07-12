@@ -1,22 +1,27 @@
 export const rulesToAdd = {
-  "@typescript-eslint/no-floating-promises": "error", // in new
-  "@typescript-eslint/restrict-plus-operands": "error", // in new
-  "@typescript-eslint/no-extra-non-null-assertion": "error", // in new
-  "@typescript-eslint/no-non-null-asserted-optional-chain": "error", // in new
-  "@typescript-eslint/explicit-function-return-type": "error",
-  "@typescript-eslint/no-parameter-properties": "off",
-  "@typescript-eslint/member-ordering": "error",
-  "@typescript-eslint/array-type": "error",
-  "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+  "@typescript-eslint/lines-between-class-members": "off",
   "@typescript-eslint/no-unnecessary-condition": "error",
   "@typescript-eslint/no-unnecessary-qualifier": "error",
+  "@typescript-eslint/no-unnecessary-boolean-literal-compare": "error",
   "@typescript-eslint/no-unnecessary-type-arguments": "error",
-  "@typescript-eslint/prefer-for-of": "error",
+  "@typescript-eslint/no-dynamic-delete": "error",
+  "@typescript-eslint/no-require-imports": "error",
+  "@typescript-eslint/no-throw-literal": "error",
   "@typescript-eslint/prefer-readonly": "error",
-  "@typescript-eslint/unified-signatures": "error",
+  "@typescript-eslint/prefer-readonly-parameter-types": "error",
   "@typescript-eslint/prefer-nullish-coalescing": "error",
   "@typescript-eslint/prefer-optional-chain": "error",
-  complexity: ["error", 10],
+  "@typescript-eslint/prefer-string-starts-ends-with": "error",
+  "@typescript-eslint/prefer-ts-expect-error": "error",
+  "@typescript-eslint/consistent-type-assertions": "error",
+  "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+  "@typescript-eslint/member-delimiter-style": "error",
+  "@typescript-eslint/member-ordering": "error",
+  "@typescript-eslint/method-signature-style": "error",
+  "@typescript-eslint/array-type": "error",
+  "@typescript-eslint/switch-exhaustiveness-check": "error",
+  "@typescript-eslint/explicit-function-return-type": "error",
+  "no-console": "off",
   "max-lines-per-function": [
     "error",
     {
@@ -26,7 +31,6 @@ export const rulesToAdd = {
       IIFEs: true,
     },
   ],
-  "max-params": ["error", 3],
 } as const;
 
 /**

@@ -1,10 +1,10 @@
 import { green, bold } from "./deps.ts";
 
 export function outputToConsole(
-  removedRules: string[],
-  rulesAdded: string[]
+  removedRules: readonly string[],
+  rulesAdded: readonly string[]
 ): void {
-  const printList = (list: string[]): string =>
+  const printList = (list: readonly string[]): string =>
     list.map((listItem) => listItem).join("\n");
 
   console.log(`

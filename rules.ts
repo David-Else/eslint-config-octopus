@@ -61,5 +61,5 @@ export const userRulesToRemove: readonly string[] = [
   "lines-between-class-members",
 ];
 
-export type rulesToRemove = typeof checkedByTypeScript[number] &
+export type RulesToRemove = typeof checkedByTypeScript[number] &
   typeof userRulesToRemove[number];

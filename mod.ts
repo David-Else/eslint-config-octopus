@@ -1,10 +1,12 @@
+#!/usr/bin/env -S deno run --allow-run --allow-write
+
 /**
  * @file Creates a .eslintrc.json config file for typescript-eslint with rules
  * @author David Else <david@elsewebdevelopment.com>
  * @copyright 2020 David Else
  * @license gpl-3.0
- * @version 1.0
- * tested with deno 1.0.0-rc2
+ * @version 0.9
+ * tested with deno 1.3
  */
 
 import { assert, fromFileUrl, writeJsonSync } from "./deps.ts";

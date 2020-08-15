@@ -4,10 +4,10 @@
 
 Automatically create your own custom `.eslintrc.json` config file containing rules taken from `eslint-config-airbnb-typescript` with the following modifications:
 
-- All turned `off` rules removed as they are not needed as overides
+- All turned `off` rules removed as they are not needed as overrides
 - All references to the `import` plugin used by the airbnb rules removed to allow the creation of one dependency free config file
 - All conflicts with Prettier removed using `eslint-config-prettier`
-- All rules removed that are superceeded by the TypeScript compiler used as supplied by `typescript-eslint/recommended`
+- All rules removed that are superseded by the TypeScript compiler used as supplied by `typescript-eslint/recommended`
 - Addition rules supplied by the user removed
 - Custom list of user rules added
 
@@ -38,4 +38,8 @@ He only comes to life if `deno` is installed, he is fanatical about using only t
 
 ## Usage
 
-`deno run --allow-read --allow-write --allow-run mod.ts`
+- `deno run --allow-read --allow-write --allow-run mod.ts`
+
+or:
+
+- Make `mod.ts` executable and start with `./mod.ts`

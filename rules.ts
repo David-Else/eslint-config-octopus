@@ -1,5 +1,10 @@
 export const rulesToAdd = {
   "@typescript-eslint/lines-between-class-members": "off",
+  // the unsafe rules don't work with deno
+  "@typescript-eslint/no-unsafe-assignment": "off",
+  "@typescript-eslint/no-unsafe-call": "off",
+  "@typescript-eslint/no-unsafe-member-access": "off",
+  "@typescript-eslint/no-unsafe-return": "off",
   "@typescript-eslint/no-unnecessary-condition": "error",
   "@typescript-eslint/no-unnecessary-qualifier": "error",
   "@typescript-eslint/no-unnecessary-boolean-literal-compare": "error",

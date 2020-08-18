@@ -51,7 +51,7 @@ const entireEslintConfig: EslintConfig = JSON.parse(
  * @param key Current key name of rule being checked
  * @param val Current value of rule being checked
  */
-export function rulesToRemove(key: string, val: any[]): boolean {
+export function rulesToRemove(key: string, val: string | number[]): boolean {
   return !!(
     val[0] !== "off" && // turned off rules
     val[0] !== 0 && // turned off rules
@@ -69,7 +69,9 @@ export function rulesToRemove(key: string, val: any[]): boolean {
  */
 export function ruleFilter(
   esLintRules: EslintRules,
-  rulesToRemoveCallback: { (key: string, val: any[]): boolean }
+  rulesToRemoveCallback: {
+    (key: string, val: string | number[]): boolean;
+  }
 ): [EslintRules, string[]] {
   const removedRules: string[] = [];
   return [

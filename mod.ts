@@ -6,7 +6,7 @@
  * @copyright 2020 David Else
  * @license gpl-3.0
  * @version 0.9
- * tested with deno 1.3
+ * tested with deno 1.3.1
  */
 
 import { assert, fromFileUrl, writeJsonSync } from "./deps.ts";

@@ -9,7 +9,7 @@
  * tested with deno 1.3.2
  */
 
-import { assert, fromFileUrl, writeJsonSync } from "./deps.ts";
+import { assert, fromFileUrl } from "./deps.ts";
 import { rulesToAdd, checkedByTypeScript, userRulesToRemove } from "./rules.ts";
 import { outputToConsole } from "./view.ts";
 
@@ -120,6 +120,9 @@ const eslintrcJson = {
  * Write to disk and output log to console if run directly
  */
 if (import.meta.main) {
-  writeJsonSync(".eslintrc.json", eslintrcJson, { spaces: 2 });
+  Deno.writeTextFileSync(
+    ".eslintrc.json",
+    JSON.stringify(eslintrcJson, null, 2)
+  );
   outputToConsole(removedRuleNames, Object.keys(rulesToAdd));
 }

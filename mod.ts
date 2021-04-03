@@ -1,16 +1,14 @@
-#!/usr/bin/env -S deno run --allow-run --allow-write
-
 /**
  * @file Creates a .eslintrc.json config file for typescript-eslint with rules
  * @author David Else <david@elsewebdevelopment.com>
  * @copyright 2020 David Else
  * @license gpl-3.0
  * @version 0.9
- * tested with deno 1.5.0
+ * tested with deno 1.8.3
  */
-
+    
 import { assert, fromFileUrl } from "./deps.ts";
-import { rulesToAdd, checkedByTypeScript, userRulesToRemove } from "./rules.ts";
+import { checkedByTypeScript, rulesToAdd, userRulesToRemove } from "./rules.ts";
 import { outputToConsole } from "./view.ts";
 
 export interface EslintRules {
@@ -42,7 +40,7 @@ const subprocess = Deno.run({
 assert(subprocess.stdout);
 const commandOutput = await Deno.readAll(subprocess.stdout);
 const entireEslintConfig: EslintConfig = JSON.parse(
-  new TextDecoder().decode(commandOutput)
+  new TextDecoder().decode(commandOutput),
 );
 
 /**
@@ -60,7 +58,7 @@ export function rulesToRemove(key: string, val: string | number[]): boolean {
     !userRulesToRemove.includes(key)
   );
 }
-
+ 
 /**
  * Filters a set of ESLint rules and returns an array with the new list and the removed rules
  *
@@ -71,7 +69,7 @@ export function ruleFilter(
   esLintRules: EslintRules,
   rulesToRemoveCallback: {
     (key: string, val: string | number[]): boolean;
-  }
+  },
 ): [EslintRules, string[]] {
   const removedRules: string[] = [];
   return [
@@ -84,7 +82,7 @@ export function ruleFilter(
         }
         removedRules.push(key);
         return false;
-      })
+      }),
     ),
     removedRules,
   ];
@@ -92,7 +90,7 @@ export function ruleFilter(
 
 const [filteredEsLintRules, removedRuleNames] = ruleFilter(
   entireEslintConfig.rules,
-  rulesToRemove
+  rulesToRemove,
 );
 
 /**
@@ -122,7 +120,7 @@ const eslintrcJson = {
 if (import.meta.main) {
   Deno.writeTextFileSync(
     ".eslintrc.json",
-    JSON.stringify(eslintrcJson, null, 2)
+    JSON.stringify(eslintrcJson, null, 2),
   );
   outputToConsole(removedRuleNames, Object.keys(rulesToAdd));
 }

@@ -1,0 +1,43 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: eslint-config-prettier
+    versions:
+    - 7.2.0
+    - 8.0.0
+    - 8.1.0
+    - 8.2.0
+  - dependency-name: "@typescript-eslint/parser"
+    versions:
+    - 4.14.1
+    - 4.14.2
+    - 4.15.0
+    - 4.15.1
+    - 4.15.2
+    - 4.16.1
+    - 4.17.0
+    - 4.18.0
+    - 4.19.0
+    - 4.20.0
+    - 4.21.0
+  - dependency-name: "@typescript-eslint/eslint-plugin"
+    versions:
+    - 4.14.1
+    - 4.14.2
+    - 4.15.0
+    - 4.15.1
+    - 4.15.2
+    - 4.16.1
+    - 4.17.0
+    - 4.18.0
+    - 4.19.0
+    - 4.20.0
+    - 4.21.0
+  - dependency-name: eslint-config-airbnb-typescript
+    versions:
+    - 10.0.2

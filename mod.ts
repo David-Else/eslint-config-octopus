@@ -4,10 +4,10 @@
  * @copyright 2020 David Else
  * @license gpl-3.0
  * @version 0.9
- * tested with deno 1.8.3
+ * tested with deno 1.13.1
  */
-    
-import { assert, fromFileUrl } from "./deps.ts";
+ 
+import { assert, fromFileUrl, readAll } from "./deps.ts";
 import { checkedByTypeScript, rulesToAdd, userRulesToRemove } from "./rules.ts";
 import { outputToConsole } from "./view.ts";
 
@@ -38,7 +38,7 @@ const subprocess = Deno.run({
 });
 
 assert(subprocess.stdout);
-const commandOutput = await Deno.readAll(subprocess.stdout);
+const commandOutput = await readAll(subprocess.stdout);
 const entireEslintConfig: EslintConfig = JSON.parse(
   new TextDecoder().decode(commandOutput),
 );

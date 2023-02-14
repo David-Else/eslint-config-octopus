@@ -1,4 +1,4 @@
-# ESLint Config Octopus 0.9
+# ESLint Config Octopus 0.9 (test)
 
 [![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/raw.githubusercontent.com/David-Else/eslint-config-octopus/master/mod.ts)
 
